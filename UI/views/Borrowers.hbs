@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="../styles/styles.css" />
+        <script async src="../app.js"></script>
+        <title>Project Library: Borrowers</title>
+    </head>
+    <body>
+        <header>
+            <h1>Borrowers</h1>
+            <!-- <h4 id="date"></h4> -->
+            <div class="home-links">
+            <nav>
+                <ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/authors.html">Authors</a></li>
+                    <li><a href="/publishers.html">Publishers</a></li>
+                    <li><a href="/books.html">Books</a></li>
+                    <li><a href="/borrowers.html">Borrowers</a></li>
+                    <li><a href="/borrowingrecords.html">Borrowing Records</a></li>
+                    <li><a href="/borrowingrecorditems.html">Borrowing Record Items</a></li> 
+                </ul>
+            </nav>
+            </div>
+        </header>
+
+        <main>
+            <div>
+                <h2>Browse</h2>
+                Borrowers data will populate here
+                {{!-- Create a table--}}
+                <table id="borrowingRecordsTable">
+
+                    {{!-- Header section --}}
+                    <thead>
+                        <tr>
+                            {{#each data.[0]}}
+                            <th>
+                                {{@key}}
+                            </th>
+                            {{/each}}
+                        </tr>
+                    </thead>
+
+                    {{!-- Body section --}}
+                    <tbody>
+                        {{#each data}}
+                        <tr>
+                            <td>{{this.borrowerID}}</td>
+                            <td>{{this.firstName}}</td>
+                            <td>{{this.lastName}}</td>
+                            <td>{{this.email}}</td>
+                            <td>{{this.phoneNum}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <h2>Add New</h2>
+                <fieldset>
+                    <form method="POST" id="addBorrower">
+                        <span style="margin: 0 10px">
+                            <label for="firstName">First Name:</label>
+                            <input type="text" id="firstName" name="firstName"/>
+                        </span>
+                        <span style="margin: 0 10px">
+                            <label for="lastName">Last Name:</label>
+                            <input type="text" id="lastName" name="lastName"/>
+                        </span>
+                        <span style="margin: 0 10px">
+                            <label for="email">Email:</label>
+                            <input type="text" id="email" name="email"/>
+                        </span>
+                        <span style="margin: 0 10px">
+                            <label for="phoneNum">Phone Number (15 characters max):</label>
+                            <input type="text" id="phoneNum" name="phoneNum"/>
+                        </span>
+                        <br>
+                        <input type="submit"/>
+                    </form>
+                </fieldset>
+            </div>
+
+            <div>
+                <h2>Update</h2>
+                <fieldset>
+                    <form method="POST" id="updateBorrower">
+                        <span style="margin: 0 10px">
+                            <label for="borrowerFullNameU">Borrower:</label>
+                            <input type="text" id="borrowerFullNameU" name="borrowerFullNameU" list="borrowersU" autocomplete="off">
+                            <datalist id="borrowersU">
+                                <option value="Celeste Newsome"></option>
+                                <option value="Max Smith"></option>
+                                <option value="Lianghui Wang"></option>
+                            </datalist>
+                        </span>
+                        <span style="margin: 0 10px">
+                            <label for="borrowerIDU">ID:</label>
+                            <input type="text" id="borrowerIDU" name="borrowerIDU" value="1" readonly/>
+                        </span>
+                        <span style="margin: 0 10px">
+                            <label for="borrowerFNameU">First Name:</label>
+                            <input type="text" id="borrowerFNameU" name="borrowerFNameU" value="Celeste"/>
+                        </span>
+                        <span style="margin: 0 10px">
+                            <label for="borrowerLNameU">Last Name:</label>
+                            <input type="text" id="borrowerLNameU" name="borrowerLNameU" value="Newsome"/>
+                        </span>
+                        <span style="margin: 0 10px">
+                            <label for="emailU">Email:</label>
+                            <input type="text" id="emailU" name="emailU" value="cnewsome@tmail.com"/>
+                        </span>
+                        <span style="margin: 0 10px">
+                            <label for="phoneNumU">Phone Number:</label>
+                            <input type="text" id="birthdateU" name="birthdateU" value="111-222-3344"/>
+                        </span>
+                        <br>
+                        <input type="submit" onclick="return confirm('Are you sure you want to update this borrower?')"/>
+                    </form>
+                </fieldset>
+            </div>
+
+            <div>
+                <h2>Delete</h2>
+                <fieldset>
+                    <form method="POST" id="deleteBorrower">
+                        <span style="margin: 0 10px">
+                            <label for="borrowersD">Borrower ID:</label>
+                            <select name="borrowersD" id="borrowersD">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </span>
+                        <br>
+                        <input type="submit" onclick="return confirm('Are you sure you want to delete this borrower?')" />
+                    </form>
+                </fieldset>
+            </div>
+        </main>
+
+    </body>
+</html>

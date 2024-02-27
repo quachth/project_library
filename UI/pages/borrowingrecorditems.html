@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="../styles/styles.css" />
+        <script async src="../javascript/app.js"></script>
+        <title>Project Library: Borrowing Records</title>
+    </head>
+    <body>
+<!-- 
+        <p>[<a href="../index.html">Home</a>] [<a href="./authors.html">Authors</a>] [<a href="./publishers.html">Publishers</a>] [<a href="./books.html">Books</a>] [<a href="./borrowers.html">Borrowers</a>] [<a href="./borrowingrecords.html">Borrowing Records</a>] [<a href="./borrowingrecorditems.html">Borrowing Record Items</a>]</p>
+        <h1>Borrowing Record Items</h1>
+        <h4 id="date"></h4> -->
+        <header>
+            <h1>Borrowing Record Items</h1>
+            <!-- <h4 id="date"></h4> -->
+            <div class="home-links">
+            <nav>
+                <ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/authors.html">Authors</a></li>
+                    <li><a href="/publishers.html">Publishers</a></li>
+                    <li><a href="/books.html">Books</a></li>
+                    <li><a href="/borrowers.html">Borrowers</a></li>
+                    <li><a href="/borrowingrecords.html">Borrowing Records</a></li>
+                    <li><a href="/borrowingrecorditems.html">Borrowing Record Items</a></li> 
+                </ul>
+            </nav>
+            </div>
+        </header>
+
+        <main>
+            <div>
+                <h2>Browse</h2>
+                Borrowing Record Items will populate here.
+                <table>
+                    <tr>
+                        <th>Record ID</th>
+                        <th>Book ID</th>
+                        <th>Book Title</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>The Count of Monte Cristo</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>The Lady of the Camellias</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>2</td>
+                        <td>The Count of Monte Cristo</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div>
+                <h2>Add New</h2>
+                <fieldset>
+                    <form method="POST" id="addRecordItem">
+                        <label for="recordItemIDs">Record ID:</label>
+                        <span style="margin: 0 10px">
+                            <select name="recordIDs" id="recordIDs">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </span>
+                        <label for="bookItemIDs">Book ID:</label>
+                        <span style="margin: 0 10px">
+                            <select name="bookItemIDs" id="bookItemIDs">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </span>
+                        <br>
+                        <input type="submit">
+                    </form>
+                </fieldset>
+            </div>
+
+            <div>
+                <h2>Delete</h2>
+                <fieldset>
+                    <form method="POST" id="deleteRecordItem">
+                        <label for="recordDeleteItemIDs">Record ID:</label>
+                        <span style="margin: 0 10px">
+                            <select name="recordDeleteIDs" id="recordDeleteIDs">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </span>
+                        <label for="bookDeleteItemIDs">Book ID:</label>
+                        <span style="margin: 0 10px">
+                            <select name="bookDeleteItemIDs" id="bookDeleteItemIDs">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </span>
+                        <br>
+                        <input type="submit">
+                    </form>
+                </fieldset>
+            </div>
+        </main>
+
+    </body>
+</html>

@@ -1,0 +1,1 @@
+ mysql -u cs340_quachth -h classmysql.engr.oregonstate.edu -p cs340_quachth

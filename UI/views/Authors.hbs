@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="../styles/styles.css" />
+        <script async src="../app.js"></script>
+        <title>Project Library: Authors</title>
+    </head>
+
+    <body>
+        <header>
+            <h1>Authors</h1>
+            <div class="home-links">
+            <nav>
+                <ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/authors.html">Authors</a></li>
+                    <li><a href="/publishers.html">Publishers</a></li>
+                    <li><a href="/books.html">Books</a></li>
+                    <li><a href="/borrowers.html">Borrowers</a></li>
+                    <li><a href="/borrowingrecords.html">Borrowing Records</a></li>
+                    <li><a href="/borrowingrecorditems.html">Borrowing Record Items</a></li> 
+                </ul>
+            </nav>
+            </div>
+        </header>
+        <!-- <p>[<a href="../index.html">Home</a>] [<a href="./authors.html">Authors</a>] [<a href="./publishers.html">Publishers</a>] [<a href="./books.html">Books</a>] [<a href="./borrowers.html">Borrowers</a>] [<a href="./borrowingrecords.html">Borrowing Records</a>] [<a href="./borrowingrecorditems.html">Borrowing Record Items</a>]</p> -->
+        <!-- <h4 id="date"></h4> -->
+        
+        <main>
+            <div>
+                <!-- <h2>Browse Authors</h2> -->
+                <h2>Authors data will populate here:</h2>
+                {{!-- Create a table--}}
+                <table id="authorTable">
+
+                    {{!-- Header section --}}
+                    <thead>
+                        <tr>
+                            {{#each data.[0]}}
+                            <th>
+                                {{@key}}
+                            </th>
+                            {{/each}}
+                        </tr>
+                    </thead>
+
+                    {{!-- Body section --}}
+                    <tbody>
+                        {{#each data}}
+                        <tr>
+                            <td>{{this.authorID}}</td>
+                            <td>{{this.firstName}}</td>
+                            <td>{{this.lastName}}</td>
+                            <td>{{this.nationality}}</td>
+                            <td>{{this.birthdate}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <h2>Add New</h2>
+                <fieldset>
+                    <form method="POST" id="addAuthor">
+                        <span style="margin: 0 10px">
+                            <label for="authorFirstName">First Name:</label>
+                            <input type="text" id="authorFirstName" name="firstName"/>
+                            </span>
+                            <span style="margin: 0 10px">
+                                <label for="authorLastName">Last Name:</label>
+                                <input type="text" id="authorLastName" name="lastName"/>
+                            </span>
+                            <span style="margin: 0 10px">
+                                <label for="nationality">Nationality:</label>
+                                <input type="text" id="nationality" name="nationality"/>
+                            </span>
+                            <span style="margin: 0 10px">
+                                <label for="birthdate">Birthdate:</label>
+                                <input type="date" id="birthdate" name="birthdate"/>
+                            </span>
+                            <br>
+                            <input type="submit">
+                    </form>
+                </fieldset>
+            </div>
+
+
+            <div>
+                <h2>Update</h2>
+                <fieldset>
+                    <form method="POST" id="updateAuthor">
+                        <span style="margin: 0 10px">
+                            <label for="authorFullNameU">Author:</label>
+                            <input type="text" id="authorFullNameU" name="authorFullNameU" list="authorsU" autocomplete="off">
+                            <datalist id="authorsU">
+                                <option value="Kiera Cass"></option>
+                                <option value="Alexandre Dumas"></option>
+                                <option value="Alexandre Dumas"></option>
+                            </datalist>
+                        </span>
+                        <span style="margin: 0 10px">
+                            <label for="authorIDU">ID:</label>
+                            <input type="text" id="authorIDU" name="authorIDU" value="1" readonly/>
+                        </span>
+                        <span style="margin: 0 10px">
+                            <label for="authorFNameU">First Name:</label>
+                            <input type="text" id="authorFNameU" name="authorFNameU" value="Kiera"/>
+                        </span>
+                        <span style="margin: 0 10px">
+                            <label for="authorLNameU">Last Name:</label>
+                            <input type="text" id="authorLNameU" name="authorLNameU" value="Cass"/>
+                        </span>
+                        <span style="margin: 0 10px">
+                            <label for="nationalityU">Nationality:</label>
+                            <input type="text" id="nationalityU" name="nationalityU" value="American"/>
+                        </span>
+                        <span style="margin: 0 10px">
+                            <label for="birthdateU">Birthdate:</label>
+                            <input type="date" id="birthdateU" name="birthdateU" value="1981-05-19"/>
+                        </span>
+                        <br>
+                        <input type="submit" onclick="return confirm('Are you sure you want to update this author?')"/>
+                    </form>
+                </fieldset>
+            </div>
+
+            <div>
+                <h2>Delete</h2>
+                <fieldset>
+                    <form>
+                        <span style="margin: 0 10px">
+                            <label for="authorsD">Author ID:</label>
+                            <select name="authorsD" id="authorsD">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </span>
+                        <br>
+                        <input type="submit" onclick="return confirm('Are you sure you want to delete this author?')" />
+                    </form>
+                </fieldset>
+            </div>
+        <br>
+        </main>
+    </body>
+</html>

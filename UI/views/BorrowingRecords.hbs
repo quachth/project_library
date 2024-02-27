@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script async src="../app.js"></script>
+        <link rel="stylesheet" type="text/css" href="../styles/styles.css" />     
+        <title>Project Library: Borrowing Records</title>
+    </head>
+    <body>
+        <header> 
+            <h1>Borrowing Records</h1>
+            <div class="home-links">
+            <nav>
+                <ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/authors.html">Authors</a></li>
+                    <li><a href="/publishers.html">Publishers</a></li>
+                    <li><a href="/books.html">Books</a></li>
+                    <li><a href="/borrowers.html">Borrowers</a></li>
+                    <li><a href="/borrowingrecords.html">Borrowing Records</a></li>
+                    <li><a href="/borrowingrecorditems.html">Borrowing Record Items</a></li> 
+                </ul>
+            </nav>
+            </div>
+        </header>
+
+        <main>
+            <div>
+                <h2>Browse Records</h2>
+                {{!-- Create a table--}}
+                <table id="borrowingRecordsTable">
+
+                    {{!-- Header section --}}
+                    <thead>
+                        <tr>
+                            {{#each data.[0]}}
+                            <th>
+                                {{@key}}
+                            </th>
+                            {{/each}}
+                        </tr>
+                    </thead>
+
+                    {{!-- Body section --}}
+                    <tbody>
+                        {{#each data}}
+                        <tr>
+                            <td>{{this.recordID}}</td>
+                            <td>{{this.fullName}}</td>
+                            <td>{{this.borrowDate}}</td>
+                            <td>{{this.returnDate}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div>
+                <h2>Add New</h2>
+                <p> To add a new borrowing record, please enter the borrower's name, borrow date, and return date below, and click Submit.</p>
+                <fieldset>
+                    <form id="addBorrowingRecordForm" method="POST" action="/add-record-form">
+                        <span style="margin: 0 10px">
+                            <label for="inputBorrower">Borrower:</label>
+                            <input type="text" id="inputBorrower" name="inputBorrower" list="borrowers" autocomplete="off" size="30">
+                            <datalist id="borrowers">
+                                <option value="">Select a Borrower</option>
+                                {{#each borrowers}}
+                                <option value="{{this.borrowerID}}">{{this.fullName}} - {{this.email}}</option>
+                                {{/each}}
+                            </datalist>
+                        </span>
+                        <span style="margin: 0 10px">
+                            <label for="newBorrowDate">Borrow Date:</label>
+                            <input type="date" id="newBorrowDate" name="newBorrowDate">
+                        </span>
+                        <span style="margin: 0 10px">
+                            <label for="newReturnDate">Return Date:</label>
+                            <input type="date" id="newReturnDate" name="newReturnDate">
+                        </span>
+                        <br>
+                        <input type="submit">
+                    </form>
+                </fieldset>
+            </div>
+
+            <br>
+
+            <div>
+                <h2>Update</h2>
+                <p>Updates the return date to the current date (status is returned).</p>
+                <fieldset>
+                    <form method="POST" id="updateRecord">
+                        <span style="margin: 0 10px">
+                            <label for="recordReturnDate">Borrowing Record:</label>
+                            <select name="recordReturn" id="recordReturnDate">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </span>
+                        <br>
+                        <input type="submit">
+                    </form>
+                </fieldset>
+            </div>
+
+            <br>
+
+            <div>
+                <h2>Delete</h2>
+                <fieldset>
+                    <form method="POST" id="deleteRecord">
+                        <span style="margin: 0 10px">
+                            <label for="borrowerRecord">Borrower:</label>
+                            <input type="text" id="" name="borrowerRecord" list="borrowerRecord" autocomplete="off" size="30">
+                            <datalist id="borrowerRecord">
+                                <option value="Celeste Newsome"></option>
+                                <option value="Max Smith"></option>
+                                <option value="Lianghui Wang"></option>
+                            </datalist>
+                        </span>
+                        <table style="margin-top: 30px;">
+                            <tr>
+                                <th>ID</th>
+                                <th>Borrow Date</th>
+                                <th>Return Date</th>
+                                <th>Select</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>2024-02-06</td>
+                                <td>2024-02-13</td>
+                                <td><input type="checkbox" name="record1"/>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td><input type="checkbox" name="record2"/>&nbsp;</td>
+                            </tr>
+                        </table>
+                        <br>
+                        <input type="submit" onclick="return confirm('Are you sure you want to delete this record?')" />
+                    </form>
+                    <script src="./js/addBorrowingRecord.js></script>
+                </fieldset>
+            </div>
+        </main>
+
+    </body>
+</html>
