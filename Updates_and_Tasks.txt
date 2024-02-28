@@ -1,7 +1,6 @@
 Updates:
-    - TQ:   created app.js, handlebar templates, and added Selects for all entities
-            Added Insert (Add) capability and dynamic dropdown menu for BorrowingRecords entity
+    - TQ:   Finished all CRUD functions for Borrowing Records (2/28)
 
 
-Planned;
-    TQ: Finish up Update and Delete for BorrowingRecords, will work on Borrowers next!
+Planned:
+    - TQ: CRD functions for Borrowers and Books (?)
