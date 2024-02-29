@@ -1,11 +1,8 @@
 /* Authors and Group: Theresa Quach and Lianghui Wang - Group 29
 Course: CS340
-Project Name: Project Library
+Project Name: Project Library - App.js
 Citation(s): 
-    Date: 2/28/24
-    Adapted from the starter code template from the github Nodejs starter app guide provided by Professor Curry and Professor Safonte from Oregon State University.
-    Appropriate variables were changed for app.js
-    Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
+    Starter Code from the github Nodejs starter app guide used to set up the body of the app.js file (https://github.com/osu-cs340-ecampus/nodejs-starter-app)
 */
 
 /*
@@ -33,15 +30,24 @@ var db = require('../database/db-connector');
     ROUTES
 */
 
-/* Public */
-app.use(express.static('public'));
-
 /* Index/Homepage */
 app.get('/index.html', function(req, res){
     res.sendFile(__dirname + '/pages/index.html');
 });
 
 /* Authors Page */
+app.post('/add-author', function(req, res){
+    let data = req.body;
+    let query = "INSERT INTO Authors (firstName, lastName, nationality, birthdate) VALUES (?, ?, ?, ?)";
+    db.pool.query(query, [data.firstName, data.lastName, data.nationality, data.birthdate], function(error, results){
+        if(error){
+            res.sendStatus(500).send({ error: 'Something failed!' });
+        } else {
+            res.redirect('/authors.html');
+        }
+    });
+});
+
 app.get('/authors.html', function(req, res)                              // This is the basic syntax for what is called a 'route'
     {
         let query1 = "SELECT * FROM Authors;";                           // Browse query for Authors
@@ -51,7 +57,47 @@ app.get('/authors.html', function(req, res)                              // This
         })        
 });
 
+app.put('/update-author/:id', function(req, res) {
+    let data = req.body;
+    let authorID = req.params.id;
+    let query = "UPDATE Authors SET firstName = ?, lastName = ?, nationality = ?, birthdate = ? WHERE authorID = ?";
+    db.pool.query(query, [data.firstName, data.lastName, data.nationality, data.birthdate, authorID], function(error, results, fields) {
+        if (error) {
+            res.status(500).send({ error: 'Something failed!' });
+        }
+        res.status(200).send({ success: 'Author updated' });
+    });
+});
+
+app.post('/delete-author', function(req, res){
+    let data = req.body;
+    let authorID = req.params.id;
+    let query = "DELETE FROM Authors WHERE authorID = ?";
+    db.pool.query(query, [data.authorID], function(error, results){
+        if(error){
+            res.sendStatus(500);
+        } else {
+            res.redirect('/authors.html');
+        }
+    });
+});
+
+
 /* Books Page */
+
+app.post('/add-book', function(req, res){
+    let data = req.body;
+    let query = "INSERT INTO Books (title, authorID, isbn, publisherID, genre) VALUES (?, ?, ?, ?, ?)";
+    db.pool.query(query, [data.title, data.authorID, data.isbn, data.publisherID, data.genre], function(error, results){
+        if(error){
+            res.sendStatus(500).send({ error: 'Something failed!' });
+        } else {
+            res.redirect('/books.html');
+        }
+    });
+});
+
+
 app.get('/books.html', function(req, res)                                                       // This is the basic syntax for what is called a 'route'
     {
         let query1 = "SELECT bookID, title, CONCAT(Authors.firstName, ' ', Authors.lastName) AS authorName, isbn, Publishers.name AS publisher, genre\
@@ -64,7 +110,46 @@ app.get('/books.html', function(req, res)                                       
         })        
 });
 
+app.post('/update-book', function(req, res){
+    let data = req.body;
+    let query = "UPDATE Books SET title = ?, authorID = ?, isbn = ?, publisherID = ?, genre = ? WHERE bookID = ?";
+    db.pool.query(query, [data.title, data.authorID, data.isbn, data.publisherID, data.genre, data.bookID], function(error, results){
+        if(error){
+            res.sendStatus(500).send({ error: 'Something failed!' });
+        } else {
+            res.redirect('/books.html');
+        }
+    });
+});
+
+app.post('/delete-book', function(req, res){
+    let data = req.body;
+    let query = "DELETE FROM Books WHERE bookID = ?";
+    db.pool.query(query, [data.bookID], function(error, results){
+        if(error){
+            res.sendStatus(500).send({ error: 'Something failed!' });
+        } else {
+            res.redirect('/books.html');
+        }
+    });
+});
+
+
 /* Borrowers Page */
+
+app.post('/add-borrower', function(req, res){
+    let data = req.body;
+    let query = "INSERT INTO Borrowers (firstName, lastName, email, phoneNum) VALUES (?, ?, ?, ?)";
+    db.pool.query(query, [data.firstName, data.lastName, data.email, data.phoneNum], function(error, results){
+        if(error){
+            res.sendStatus(500).send({ error: 'Something failed!' });
+        } else {
+            res.redirect('/borrowers.html');
+        }
+    });
+});
+
+
 app.get('/borrowers.html', function(req, res)                                                   // This is the basic syntax for what is called a 'route'
     {
         let query1 = "SELECT * FROM Borrowers;";                                                // Browse query for Borrowers
@@ -73,15 +158,38 @@ app.get('/borrowers.html', function(req, res)                                   
         })        
 });
 
+app.put('/update-borrower', function(req, res){
+    let data = req.body;
+    let query = "UPDATE Borrowers SET firstName = ?, lastName = ?, email = ?, phoneNum = ? WHERE borrowerID = ?";
+    db.pool.query(query, [data.firstName, data.lastName, data.email, data.phoneNum, data.borrowerID], function(error, results, fields){
+        if(error){
+            res.status(500).send({ error: 'Something failed!' });
+        } else {
+            res.redirect('/borrowers.html');
+        }
+    });
+});
+
+app.delete('/delete-borrower', function(req, res){
+    let data = req.body;
+    let query = "DELETE FROM Borrowers WHERE borrowerID = ?";
+    db.pool.query(query, [data.borrowerID], function(error, results, fields){
+        if(error){
+            res.status(500).send({ error: 'Something failed!' });
+        } else {
+            res.redirect('/borrowers.html');
+        }
+    });
+});
+
+
 /* Borrowing Records Page */
-// Browse/Select
 app.get('/borrowingrecords.html', function(req, res)                                                    // This is the basic syntax for what is called a 'route'
     {
         // Query 1 to populate Browse table
         let query1 = "SELECT BorrowingRecords.recordID, CONCAT(Borrowers.firstName, ' ', Borrowers.lastName) AS fullName, BorrowingRecords.borrowDate, BorrowingRecords.returnDate\
                     FROM BorrowingRecords\
-                    INNER JOIN Borrowers ON BorrowingRecords.borrowerID = Borrowers.borrowerID\
-                    ORDER BY BorrowingRecords.recordID;";         // Browse query for Borrowing Records
+                    INNER JOIN Borrowers ON BorrowingRecords.borrowerID=Borrowers.borrowerID;";         // Browse query for Borrowing Records
         
         // Query 2 to populate dynamic drop down menu/search for Borrower names
         let query2 = "SELECT borrowerID, CONCAT(firstName, ' ', lastName) AS fullName, email FROM Borrowers;";
@@ -103,7 +211,7 @@ app.get('/borrowingrecords.html', function(req, res)                            
         
 
 });
-// Add record
+
 app.post('/add-record-form', function(req, res){
     //Capture incoming data and parse it back to a JS object
     let data = req.body;
@@ -120,7 +228,7 @@ app.post('/add-record-form', function(req, res){
         else {
             query2 = "SELECT BorrowingRecords.recordID, CONCAT(Borrowers.firstName, ' ', Borrowers.lastName) AS fullName, BorrowingRecords.borrowDate, BorrowingRecords.returnDate\
             FROM BorrowingRecords\
-            INNER JOIN Borrowers ON BorrowingRecords.borrowerID=Borrowers.borrowerID"; 
+            INNER JOIN Borrowers ON BorrowingRecords.borrowerID=Borrowers.borrowerID;" 
             db.pool.query(query2, function(error, rows, fields){
                 if(error){
                     console.log(error);
@@ -128,56 +236,6 @@ app.post('/add-record-form', function(req, res){
                 }
                 else{
                     res.redirect('/borrowingrecords.html');
-                }
-            })
-        }
-    })
-});
-// Delete record
-app.delete('/delete-record-form', function(req, res, next){
-
-    let data = req.body;
-    let recordID = parseInt(data.id);
-    let deleteBorrowingRecord = "DELETE FROM BorrowingRecords WHERE recordID = ?";
-    let deleteBorrowingRecordItems = "DELETE FROM BorrowingRecordItems WHERE recordID = ?";
-
-
-    // Run query - deletion will cascade on intersection table
-    db.pool.query(deleteBorrowingRecord, [recordID], function(error, rows, fields){
-        if (error){
-            // Log error to terminal and send visitor and HTTP response 400 indicating a bad request
-            console.log(error);
-            res.sendStatus(400);
-        }
-        else {
-            res.sendStatus(204);
-        }
-    })
-});
-// Update Record
-app.put('/update-record-form', function(req, res, next){
-    let data = req.body;
-    let recordID = parseInt(data.recordID);
-
-    let queryUpdateReturnDate = "UPDATE BorrowingRecords SET returnDate = CURDATE() WHERE BorrowingRecords.recordID = ?";
-    let queryShowUpdate = "SELECT * FROM BorrowingRecords WHERE recordID = ?";
-
-    // Run query
-    db.pool.query(queryUpdateReturnDate, [recordID], function(error, rows, fields){
-        if (error) {
-            // Log error to terminal and send back HTTP response 400
-            console.log(error);
-            res.sendStatus(400);
-        }
-        else {
-            // If no error, run second query to update table on the front end
-            db.pool.query(queryShowUpdate, [recordID], function(error, rows, fields){
-                if (error) {
-                    console.log(error);
-                    res.sendStatus(400);
-                }
-                else {
-                    res.send(rows);
                 }
             })
         }
@@ -199,12 +257,50 @@ app.get('/borrowingrecorditems.html', function(req, res)                        
 });
              
 /* Publishers */
+
+app.post('/add-publisher', function(req, res){
+    let data = req.body;
+    let query = "INSERT INTO Publishers (name, address, contact) VALUES (?, ?, ?)";
+    db.pool.query(query, [data.name, data.address, data.contact], function(error, results, fields){
+        if(error){
+            res.status(500).send({ error: 'Something failed!' });
+        } else {
+            res.redirect('/publishers.html');
+        }
+    });
+});
+
+
 app.get('/publishers.html', function(req, res)                                                   // This is the basic syntax for what is called a 'route'
     {
         let query1 = "SELECT * FROM Publishers;";                                                // Browse query for Publishers
         db.pool.query(query1, function(error, rows, fields) {
             res.render('Publishers', {data: rows});                                              // Render the Publishers.hbs file, and also send the renderer an object where 'data' is equal to the 'rows' we received back from the query
         })        
+});
+
+app.put('/update-publisher', function(req, res){
+    let data = req.body;
+    let query = "UPDATE Publishers SET name = ?, address = ?, contact = ? WHERE publisherID = ?";
+    db.pool.query(query, [data.name, data.address, data.contact, data.publisherID], function(error, results, fields){
+        if(error){
+            res.status(500).send({ error: 'Something failed!' });
+        } else {
+            res.redirect('/publishers.html');
+        }
+    });
+});
+
+app.delete('/delete-publisher', function(req, res){
+    let data = req.body;
+    let query = "DELETE FROM Publishers WHERE publisherID = ?";
+    db.pool.query(query, [data.publisherID], function(error, results, fields){
+        if(error){
+            res.status(500).send({ error: 'Something failed!' });
+        } else {
+            res.redirect('/publishers.html');
+        }
+    });
 });
 
 
