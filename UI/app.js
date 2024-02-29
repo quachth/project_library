@@ -30,6 +30,10 @@ var db = require('../database/db-connector');
     ROUTES
 */
 
+
+/* Public */
+app.use(express.static('public'));
+
 /* Index/Homepage */
 app.get('/index.html', function(req, res){
     res.sendFile(__dirname + '/pages/index.html');
@@ -184,32 +188,30 @@ app.delete('/delete-borrower', function(req, res){
 
 
 /* Borrowing Records Page */
-app.get('/borrowingrecords.html', function(req, res)                                                    // This is the basic syntax for what is called a 'route'
-    {
-        // Query 1 to populate Browse table
-        let query1 = "SELECT BorrowingRecords.recordID, CONCAT(Borrowers.firstName, ' ', Borrowers.lastName) AS fullName, BorrowingRecords.borrowDate, BorrowingRecords.returnDate\
-                    FROM BorrowingRecords\
-                    INNER JOIN Borrowers ON BorrowingRecords.borrowerID=Borrowers.borrowerID;";         // Browse query for Borrowing Records
-        
-        // Query 2 to populate dynamic drop down menu/search for Borrower names
-        let query2 = "SELECT borrowerID, CONCAT(firstName, ' ', lastName) AS fullName, email FROM Borrowers;";
+app.get('/borrowingrecords.html', function(req, res){                                                    // This is the basic syntax for what is called a 'route'
+    // Query 1 to populate Browse table
+    let query1 = "SELECT BorrowingRecords.recordID, CONCAT(Borrowers.firstName, ' ', Borrowers.lastName) AS fullName, BorrowingRecords.borrowDate, BorrowingRecords.returnDate\
+                FROM BorrowingRecords\
+                INNER JOIN Borrowers ON BorrowingRecords.borrowerID=Borrowers.borrowerID\
+                ORDER BY BorrowingRecords.recordID;";                                                // Browse query for Borrowing Records; Order By is needed to sort table by RecordID, otherwise it sorts by the borrowerID.
+    
+    // Query 2 to populate dynamic drop down menu/search for Borrower names
+    let query2 = "SELECT borrowerID, CONCAT(firstName, ' ', lastName) AS fullName, email FROM Borrowers;";
 
-        db.pool.query(query1, function(error, rows, fields) {
+    db.pool.query(query1, function(error, rows, fields) {
 
-            //Save the records
-            let records = rows;
+        //Save the records
+        let records = rows;
 
-            //Run second query
-            db.pool.query(query2, (error, rows, fields) => {
-                //Save the borrowers
-                let borrowers = rows;
-                
-                // Render the BorrowingRecords.hbs file, and also send the renderer an object where 'data' is equal to the 'rows' we received back from the query
-                return res.render('BorrowingRecords', {data: records, borrowers: borrowers});
-            })
+        //Run second query
+        db.pool.query(query2, (error, rows, fields) => {
+            //Save the borrowers
+            let borrowers = rows;
+            
+            // Render the BorrowingRecords.hbs file, and also send the renderer an object where 'data' is equal to the 'rows' we received back from the query
+            return res.render('BorrowingRecords', {data: records, borrowers: borrowers});
         })
-        
-
+    })
 });
 
 app.post('/add-record-form', function(req, res){
@@ -241,20 +243,140 @@ app.post('/add-record-form', function(req, res){
         }
     })
 });
+// Delete record
+app.delete('/delete-record-form', function(req, res, next){
+
+    let data = req.body;
+    let recordID = parseInt(data.id);
+    let deleteBorrowingRecord = "DELETE FROM BorrowingRecords WHERE recordID = ?";
+
+    // Run query - deletion will cascade on intersection table
+    db.pool.query(deleteBorrowingRecord, [recordID], function(error, rows, fields){
+        if (error){
+            // Log error to terminal and send visitor and HTTP response 400 indicating a bad request
+            console.log(error);
+            res.sendStatus(400);
+        }
+        else {
+            res.sendStatus(204);
+        }
+    })
+});
+// Update Record
+app.put('/update-record-form', function(req, res, next){
+    let data = req.body;
+    let recordID = parseInt(data.recordID);
+
+    let queryUpdateReturnDate = "UPDATE BorrowingRecords SET returnDate = CURDATE() WHERE BorrowingRecords.recordID = ?";
+    let queryShowUpdate = "SELECT * FROM BorrowingRecords WHERE recordID = ?";
+
+    // Run query
+    db.pool.query(queryUpdateReturnDate, [recordID], function(error, rows, fields){
+        if (error) {
+            // Log error to terminal and send back HTTP response 400
+            console.log(error);
+            res.sendStatus(400);
+        }
+        else {
+            // If no error, run second query to update table on the front end
+            db.pool.query(queryShowUpdate, [recordID], function(error, rows, fields){
+                if (error) {
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                else {
+                    res.send(rows);
+                }
+            })
+        }
+    })
+});
 
 /* Borrowing Record Items Page */
-app.get('/borrowingrecorditems.html', function(req, res)                                                   // This is the basic syntax for what is called a 'route'
+app.get('/borrowingrecorditems.html', function(req, res)                                                                // This is the basic syntax for what is called a 'route'
     {
-        let query1 = "SELECT BorrowingRecordItems.recordID, BorrowingRecordItems.bookID, Books.title AS title,\
-                        CONCAT(Borrowers.firstName, ' ', Borrowers.lastName) AS borrowerName\
+        // First query to populate BorrowingRecordItems table
+        let queryShowAllRecordItems = "SELECT BorrowingRecordItems.recordID, BorrowingRecordItems.bookID, Books.title AS title,\
+                                        CONCAT(Borrowers.firstName, ' ', Borrowers.lastName) AS borrowerName\
+                                        FROM BorrowingRecordItems\
+                                        INNER JOIN Books ON BorrowingRecordItems.bookID = Books.bookID\
+                                        INNER JOIN BorrowingRecords ON BorrowingRecordItems.recordID = BorrowingRecords.recordID\
+                                        INNER JOIN Borrowers ON BorrowingRecords.borrowerID = Borrowers.borrowerID;";                      // Browse query for Publishers
+        
+        // Second query to populate dynamic dropdown for RecordIDs
+        let queryAllRecordIDs = "SELECT * FROM BorrowingRecords;";
+
+        // Third query to populate dynamic dropdown for Book item
+        let queryAllBookItems = "SELECT * FROM Books;";
+
+        // Run first query and save data to populate table
+        db.pool.query(queryShowAllRecordItems, function(error, rows, fields) {
+            let recordsAndItems = rows;
+
+            //Run second query and save the record IDs
+            db.pool.query(queryAllRecordIDs, function(error, rows, fields){
+                let records = rows;
+
+                //run third query and save book item IDs
+                db.pool.query(queryAllBookItems, function(error, rows, fields) {
+                    let items = rows;
+                    return res.render('BorrowingRecordItems', {data: recordsAndItems, records: records, items: items});      // Render the Publishers.hbs file, and also send the renderer an object where 'data' is 
+                })                                                                                                          // equal to the 'rows' we received back from the query
+            })
+        })        
+});
+// Add record item
+app.post('/add-record-item-form', function(req, res){
+    //Capture incoming data and parse it back to a JS object
+    let data = req.body;
+
+    //Create the query and run it on the database
+    queryAddRecordItem = `INSERT INTO BorrowingRecordItems (recordID, bookID) VALUES ('${data['recordID']}', '${data['itemID']}');`;
+    db.pool.query(queryAddRecordItem, function(error, rows, fields){
+        //Check for errors
+        if (error) {
+            //Log error to terminal and set response 400 to indicate bad request
+            console.log(error);
+            res.sendStatus(400);
+        }
+        else {
+            queryRefreshAdd = "SELECT BorrowingRecordItems.recordID, BorrowingRecordItems.bookID, Books.title AS title,\
+                    CONCAT(Borrowers.firstName, ' ', Borrowers.lastName) AS borrowerName\
                     FROM BorrowingRecordItems\
                     INNER JOIN Books ON BorrowingRecordItems.bookID = Books.bookID\
                     INNER JOIN BorrowingRecords ON BorrowingRecordItems.recordID = BorrowingRecords.recordID\
-                    INNER JOIN Borrowers ON BorrowingRecords.borrowerID = Borrowers.borrowerID;";                      // Browse query for Publishers
-        db.pool.query(query1, function(error, rows, fields) {
-            res.render('BorrowingRecordItems', {data: rows});                                                        // Render the Publishers.hbs file, and also send the renderer an object where 'data' is equal to the 'rows' we received back from the query
-        })        
+                    INNER JOIN Borrowers ON BorrowingRecords.borrowerID = Borrowers.borrowerID;";
+            db.pool.query(queryRefreshAdd, function(error, rows, fields){
+                if(error){
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                else{
+                    res.redirect('/borrowingrecorditems.html');
+                }
+            })
+        }
+    })
 });
+// Delete record item
+app.delete('/delete-record-item', function(req, res, next){
+    let data = req.body;
+    let recordID = parseInt(data.recordID);
+    let bookID = parseInt(data.bookID);
+
+    let queryDeleteRecordItem = "DELETE FROM BorrowingRecordItems WHERE recordID = ? AND bookID = ?;";
+
+    // Run the query
+    db.pool.query(queryDeleteRecordItem, [recordID, bookID], function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            res.sendStatus(400);
+        }
+        else {
+            res.sendStatus(204);
+        }
+    })
+})
              
 /* Publishers */
 

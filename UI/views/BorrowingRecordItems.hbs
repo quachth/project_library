@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="../styles/styles.css" />
-        <script async src="../javascript/app.js"></script>
+        <script async src="../app.js"></script>
+        <link rel="stylesheet" type="text/css" href="../styles/styles.css" />     
         <title>Project Library: Borrowing Records</title>
     </head>
     <body>
@@ -33,7 +33,7 @@
                 <h2>Browse</h2>
                 Borrowing Record Items will populate here.
                 {{!-- Create a table--}}
-                <table id="borrowingRecordsTable">
+                <table id="borrowingRecordItemsTable">
 
                     {{!-- Header section --}}
                     <thead>
@@ -49,62 +49,41 @@
                     {{!-- Body section --}}
                     <tbody>
                         {{#each data}}
-                        <tr>
+                        <tr data-record={{this.recordID}} data-book={{this.bookID}}>
                             <td>{{this.recordID}}</td>
                             <td>{{this.bookID}}</td>
                             <td>{{this.title}}</td>
                             <td>{{this.borrowerName}}</td>
+                            <td><button onClick="deleteRecordItem({{this.recordID}}, {{this.bookID}})">Delete</button></td>
                         </tr>
                         {{/each}}
                     </tbody>
                 </table>
+                <script src="/js/deleteRecordItem.js"></script>
             </div>
             
             <div>
                 <h2>Add New</h2>
                 <fieldset>
-                    <form method="POST" id="addRecordItem">
+                    <form method="POST" id="addRecordItem" action="/add-record-item-form">
                         <label for="recordItemIDs">Record ID:</label>
                         <span style="margin: 0 10px">
-                            <select name="recordIDs" id="recordIDs">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
+                            <select name="recordID" id="recordID">
+                                <option value="test">Select a record to add an item to:</option>
+                                {{#each records}}
+                                <option value="{{this.recordID}}">{{this.recordID}}</option>
+                                {{/each}}
                             </select>
                         </span>
-                        <label for="bookItemIDs">Book ID:</label>
+                        <label for="bookItemIDs">Book Title:</label>
                         <span style="margin: 0 10px">
-                            <select name="bookItemIDs" id="bookItemIDs">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </span>
-                        <br>
-                        <input type="submit">
-                    </form>
-                </fieldset>
-            </div>
-
-            <div>
-                <h2>Delete</h2>
-                <fieldset>
-                    <form method="POST" id="deleteRecordItem">
-                        <label for="recordDeleteItemIDs">Record ID:</label>
-                        <span style="margin: 0 10px">
-                            <select name="recordDeleteIDs" id="recordDeleteIDs">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </span>
-                        <label for="bookDeleteItemIDs">Book ID:</label>
-                        <span style="margin: 0 10px">
-                            <select name="bookDeleteItemIDs" id="bookDeleteItemIDs">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
+                            <input type="text" id="itemID" name="itemID" list="items" autocomplete="off" size="30">
+                            <datalist id="items">
+                                <option value="test">Select an item to add:</option>
+                                {{#each items}}
+                                <option value="{{this.bookID}}">{{this.title}}</option>
+                                {{/each}}
+                            </datalist>
                         </span>
                         <br>
                         <input type="submit">
