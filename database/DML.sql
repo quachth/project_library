@@ -1,7 +1,7 @@
--- These are some Database Manipulation queries for a partially implemented Project Website 
--- using the project_library_db database.
--- Your submission should contain ALL the queries required to implement ALL the
--- functionalities listed in the Project Specs.
+/* Authors and Group: Theresa Quach and Lianghui Wang - Group 29
+Course: CS340
+Project Name: Project Library - Data Manipulation Queries
+*/
 
 /* Dropdown Menus */
 -- get all Author IDs and Names to populate the Authors dropdown
