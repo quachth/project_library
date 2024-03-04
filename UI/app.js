@@ -2,7 +2,7 @@
 Course: CS340
 Project Name: Project Library - App.js
 Citation(s): 
-    Starter Code from the github Nodejs starter app guide used to set up the body of the app.js file (https://github.com/osu-cs340-ecampus/nodejs-starter-app)
+    Starter Code from the github Nodejs starter app guide used to set up the body of the app.js file and to use handlebar templates (https://github.com/osu-cs340-ecampus/nodejs-starter-app)
 */
 
 /*
