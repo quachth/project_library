@@ -1,7 +1,10 @@
 /* Authors and Group: Theresa Quach and Lianghui Wang - Group 29
 Course: CS340
 Project Name: Project Library
-Citation(s): Code dump from MySQL Workbench was then altered and cleaned for importability.
+Citation(s): 
+    Code dump from MySQL Workbench was then altered and cleaned for importability. Process to create dump file was explained in the
+    Project Step 2 Draft: Normalized Schema + DDL instructions on forward engineering a scheme in MySQL Workbench 
+    (https://canvas.oregonstate.edu/courses/1946034/assignments/9456214?module_item_id=23809320)
 */
 
 
