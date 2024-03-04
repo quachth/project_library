@@ -31,7 +31,7 @@
         <main>
             <div>
                 <h2>Browse</h2>
-                Borrowing Record Items will populate here.
+                Only one copy of an item is allowed per record. To re-borrow an item, please create a new record for the borrower. Otherwise, a bad request will be returned.
                 {{!-- Create a table--}}
                 <table id="borrowingRecordItemsTable">
 
@@ -70,7 +70,7 @@
                         <label for="recordItemIDs">Record ID:</label>
                         <span style="margin: 0 10px">
                             <select name="recordID" id="recordID">
-                                <option value="test">Select a record to add an item to:</option>
+                                <option value="">Select a record to add an item to:</option>
                                 {{#each records}}
                                 <option value="{{this.recordID}}">{{this.recordID}}</option>
                                 {{/each}}
@@ -80,7 +80,6 @@
                         <span style="margin: 0 10px">
                             <input type="text" id="itemID" name="itemID" list="items" autocomplete="off" size="30">
                             <datalist id="items">
-                                <option value="test">Select an item to add:</option>
                                 {{#each items}}
                                 <option value="{{this.bookID}}">{{this.title}}</option>
                                 {{/each}}

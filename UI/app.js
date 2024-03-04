@@ -338,6 +338,7 @@ app.post('/add-record-item-form', function(req, res){
             //Log error to terminal and set response 400 to indicate bad request
             console.log(error);
             res.sendStatus(400);
+
         }
         else {
             queryRefreshAdd = "SELECT BorrowingRecordItems.recordID, BorrowingRecordItems.bookID, Books.title AS title,\
