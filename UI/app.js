@@ -34,16 +34,39 @@ var db = require('../database/db-connector');
 /* Public */
 app.use(express.static('public'));
 
+
 /* Index/Homepage */
 app.get('/index.html', function(req, res){
     res.sendFile(__dirname + '/pages/index.html');
 });
 
+
 /* Authors Page */
+// Browse Authors Table
+app.get('/authors.html', function(req, res) {                              // This is the basic syntax for what is called a 'route'
+    // Query 1 to populate authors table
+    let queryBrowseAuthors = "SELECT * FROM Authors;";                                  // Browse query for Authors
+    //Query 2 to populate dynamic drop down of author names
+    let queryDropdownAuthors = "SELECT authorID, CONCAT(firstName, ' ', lastName) AS fullAuthorName, birthdate FROM Authors;";
+
+    db.pool.query(queryBrowseAuthors, function(error, rows, fields) {
+        // Save the authors
+        let authors = rows;
+
+        db.pool.query(queryDropdownAuthors, function(error, rows, fields){
+            // Save shorthand of authors
+            let shortenedAuthors = rows;
+            return res.render('Authors', {data: authors, authors: shortenedAuthors});                                // Render the Authors.hbs file, and also send the renderer an object where 'data' is equal to the 'rows' we received back from the query
+        })
+        
+    })        
+});
+
+// Add Author
 app.post('/add-author', function(req, res){
     let data = req.body;
-    let query = "INSERT INTO Authors (firstName, lastName, nationality, birthdate) VALUES (?, ?, ?, ?)";
-    db.pool.query(query, [data.firstName, data.lastName, data.nationality, data.birthdate], function(error, results){
+    queryAddAuthor = `INSERT INTO Authors (firstName, lastName, nationality, birthdate) VALUES ('${data['newAuthorFirst']}','${data['newAuthorLast']}', '${data['newNationality']}', '${data['newBirthdate']}');`;
+    db.pool.query(queryAddAuthor, function(error, rows, fields) {
         if(error){
             res.sendStatus(500).send({ error: 'Something failed!' });
         } else {
@@ -52,16 +75,8 @@ app.post('/add-author', function(req, res){
     });
 });
 
-app.get('/authors.html', function(req, res)                              // This is the basic syntax for what is called a 'route'
-    {
-        let query1 = "SELECT * FROM Authors;";                           // Browse query for Authors
-        db.pool.query(query1, function(error, rows, fields) {
-            res.render('Authors', {data: rows});                        // Render the Authors.hbs file, and also send the renderer an object where 'data' is equal to the 'rows' we received back from the query
-            
-        })        
-});
-
-app.put('/update-author/:id', function(req, res) {
+// Update Author
+app.put('/update-author/', function(req, res) {
     let data = req.body;
     let authorID = req.params.id;
     let query = "UPDATE Authors SET firstName = ?, lastName = ?, nationality = ?, birthdate = ? WHERE authorID = ?";
@@ -88,11 +103,47 @@ app.post('/delete-author', function(req, res){
 
 
 /* Books Page */
+// Browse Books
+app.get('/books.html', function(req, res)                                                       
+    {
+        // Query to populate books table
+        let queryBrowseBooks = "SELECT bookID, title, CONCAT(Authors.firstName, ' ', Authors.lastName) AS authorName, isbn, Publishers.name AS publisher, genre\
+                    FROM Books\
+                    INNER JOIN Authors ON Books.authorID = Authors.authorID\
+                    LEFT OUTER JOIN Publishers ON Publishers.publisherID = Books.publisherID\
+                    ORDER BY Books.bookID;";                                                                                                        // Browse query for Books
+        // Query to dynamically populate Authors dropdown menu
+        let queryDropdownAuthors = "SELECT authorID, CONCAT(firstName, ' ', lastName) AS fullAuthorName, birthdate FROM Authors;";
+        //Query to dynamically populate Authors dropdown menu
+        let queryDropdownPubs = "SELECT publisherID, name FROM Publishers;";
 
+        // 1st Query
+        db.pool.query(queryBrowseBooks, function(error, rows, fields) {
+            let allBooks = rows;
+            // 2nd Query
+            db.pool.query(queryDropdownAuthors, function(error, rows, fields) {
+                let authors = rows;
+                // 3rd Query
+                db.pool.query(queryDropdownPubs, function(error, rows, fields){
+                    let publishers = rows;
+                    return res.render('Books', {data: allBooks, authors: authors, publishers: publishers});                                          // Render the Books.hbs file, and also send the renderer an object where 'data' is equal to the 'rows' we received back from the query
+                })
+            })            
+        })        
+});
+
+// Add Books
 app.post('/add-book', function(req, res){
     let data = req.body;
-    let query = "INSERT INTO Books (title, authorID, isbn, publisherID, genre) VALUES (?, ?, ?, ?, ?)";
-    db.pool.query(query, [data.title, data.authorID, data.isbn, data.publisherID, data.genre], function(error, results){
+    
+    // Capture NULL values from Publisher field
+    let publisher = parseInt(data.newBookPub);
+    if (isNaN(publisher)) {
+        publisher = 'NULL';
+    }
+
+    let queryAddBook = `INSERT INTO Books (title, authorID, isbn, publisherID, genre) VALUES ('${data['newTitle']}', '${data['newBookAuthor']}', '${data['newIsbn']}', ${publisher}, '${data['newBookGenre']}')`;
+    db.pool.query(queryAddBook, function(error, rows, fields){
         if(error){
             res.sendStatus(500).send({ error: 'Something failed!' });
         } else {
@@ -101,19 +152,7 @@ app.post('/add-book', function(req, res){
     });
 });
 
-
-app.get('/books.html', function(req, res)                                                       // This is the basic syntax for what is called a 'route'
-    {
-        let query1 = "SELECT bookID, title, CONCAT(Authors.firstName, ' ', Authors.lastName) AS authorName, isbn, Publishers.name AS publisher, genre\
-                    FROM Books\
-                    INNER JOIN Authors ON Books.authorID = Authors.authorID\
-                    INNER JOIN Publishers ON Publishers.publisherID = Books.publisherID;";      // Browse query for Books
-        db.pool.query(query1, function(error, rows, fields) {
-            res.render('Books', {data: rows});                                                  // Render the Books.hbs file, and also send the renderer an object where 'data' is equal to the 'rows' we received back from the query
-            
-        })        
-});
-
+// Update Books
 app.post('/update-book', function(req, res){
     let data = req.body;
     let query = "UPDATE Books SET title = ?, authorID = ?, isbn = ?, publisherID = ?, genre = ? WHERE bookID = ?";
@@ -126,6 +165,7 @@ app.post('/update-book', function(req, res){
     });
 });
 
+// Delete Book
 app.post('/delete-book', function(req, res){
     let data = req.body;
     let query = "DELETE FROM Books WHERE bookID = ?";
@@ -140,20 +180,7 @@ app.post('/delete-book', function(req, res){
 
 
 /* Borrowers Page */
-
-app.post('/add-borrower', function(req, res){
-    let data = req.body;
-    let query = "INSERT INTO Borrowers (firstName, lastName, email, phoneNum) VALUES (?, ?, ?, ?)";
-    db.pool.query(query, [data.firstName, data.lastName, data.email, data.phoneNum], function(error, results){
-        if(error){
-            res.sendStatus(500).send({ error: 'Something failed!' });
-        } else {
-            res.redirect('/borrowers.html');
-        }
-    });
-});
-
-
+// Browse Borrowers
 app.get('/borrowers.html', function(req, res)                                                   // This is the basic syntax for what is called a 'route'
     {
         let query1 = "SELECT * FROM Borrowers;";                                                // Browse query for Borrowers
@@ -162,6 +189,20 @@ app.get('/borrowers.html', function(req, res)                                   
         })        
 });
 
+// Add Borrowers
+app.post('/add-borrower', function(req, res){
+    let data = req.body;
+    let queryAddBorrower = `INSERT INTO Borrowers (firstName, lastName, email, phoneNum) VALUES ('${data['newBorrowerFirst']}', '${data['newBorrowerLast']}', '${data['newBorrowerEmail']}', '${data['newBorrowerPhone']}')`;
+    db.pool.query(queryAddBorrower, function(error, rows, fields){
+        if(error){
+            res.sendStatus(500).send({ error: 'Something failed!' });
+        } else {
+            res.redirect('/borrowers.html');
+        }
+    });
+});
+
+// Update Borrowers
 app.put('/update-borrower', function(req, res){
     let data = req.body;
     let query = "UPDATE Borrowers SET firstName = ?, lastName = ?, email = ?, phoneNum = ? WHERE borrowerID = ?";
@@ -174,6 +215,7 @@ app.put('/update-borrower', function(req, res){
     });
 });
 
+// Delete Borrowers
 app.delete('/delete-borrower', function(req, res){
     let data = req.body;
     let query = "DELETE FROM Borrowers WHERE borrowerID = ?";
@@ -188,6 +230,7 @@ app.delete('/delete-borrower', function(req, res){
 
 
 /* Borrowing Records Page */
+//Browse Records
 app.get('/borrowingrecords.html', function(req, res){                                                    // This is the basic syntax for what is called a 'route'
     // Query 1 to populate Browse table
     let query1 = "SELECT BorrowingRecords.recordID, CONCAT(Borrowers.firstName, ' ', Borrowers.lastName) AS fullName, BorrowingRecords.borrowDate, BorrowingRecords.returnDate\
@@ -214,6 +257,7 @@ app.get('/borrowingrecords.html', function(req, res){                           
     })
 });
 
+// Add Records
 app.post('/add-record-form', function(req, res){
     //Capture incoming data and parse it back to a JS object
     let data = req.body;
@@ -243,6 +287,7 @@ app.post('/add-record-form', function(req, res){
         }
     })
 });
+
 // Delete record
 app.delete('/delete-record-form', function(req, res, next){
 
@@ -262,6 +307,7 @@ app.delete('/delete-record-form', function(req, res, next){
         }
     })
 });
+
 // Update Record
 app.put('/update-record-form', function(req, res, next){
     let data = req.body;
@@ -292,7 +338,9 @@ app.put('/update-record-form', function(req, res, next){
     })
 });
 
+
 /* Borrowing Record Items Page */
+// Browse Record Items
 app.get('/borrowingrecorditems.html', function(req, res)                                                                // This is the basic syntax for what is called a 'route'
     {
         // First query to populate BorrowingRecordItems table
@@ -301,7 +349,8 @@ app.get('/borrowingrecorditems.html', function(req, res)                        
                                         FROM BorrowingRecordItems\
                                         INNER JOIN Books ON BorrowingRecordItems.bookID = Books.bookID\
                                         INNER JOIN BorrowingRecords ON BorrowingRecordItems.recordID = BorrowingRecords.recordID\
-                                        INNER JOIN Borrowers ON BorrowingRecords.borrowerID = Borrowers.borrowerID;";                      // Browse query for Publishers
+                                        INNER JOIN Borrowers ON BorrowingRecords.borrowerID = Borrowers.borrowerID\
+                                        ORDER BY BorrowingRecordItems.recordID;";                                       // Browse query for Publishers
         
         // Second query to populate dynamic dropdown for RecordIDs
         let queryAllRecordIDs = "SELECT * FROM BorrowingRecords;";
@@ -325,6 +374,7 @@ app.get('/borrowingrecorditems.html', function(req, res)                        
             })
         })        
 });
+
 // Add record item
 app.post('/add-record-item-form', function(req, res){
     //Capture incoming data and parse it back to a JS object
@@ -359,6 +409,7 @@ app.post('/add-record-item-form', function(req, res){
         }
     })
 });
+
 // Delete record item
 app.delete('/delete-record-item', function(req, res, next){
     let data = req.body;
@@ -379,21 +430,9 @@ app.delete('/delete-record-item', function(req, res, next){
     })
 })
              
+
 /* Publishers */
-
-app.post('/add-publisher', function(req, res){
-    let data = req.body;
-    let query = "INSERT INTO Publishers (name, address, contact) VALUES (?, ?, ?)";
-    db.pool.query(query, [data.name, data.address, data.contact], function(error, results, fields){
-        if(error){
-            res.status(500).send({ error: 'Something failed!' });
-        } else {
-            res.redirect('/publishers.html');
-        }
-    });
-});
-
-
+// Browse Publishers
 app.get('/publishers.html', function(req, res)                                                   // This is the basic syntax for what is called a 'route'
     {
         let query1 = "SELECT * FROM Publishers;";                                                // Browse query for Publishers
@@ -402,6 +441,21 @@ app.get('/publishers.html', function(req, res)                                  
         })        
 });
 
+// Add Publishers
+app.post('/add-publisher', function(req, res){
+    let data = req.body;
+    let queryAddPublisher = `INSERT INTO Publishers (name, address, contact) VALUES ('${data['newPubName']}', '${data['newPubAddress']}', '${data['newPubContact']}');`;
+
+    db.pool.query(queryAddPublisher, function(error, rows, fields) {
+        if(error){
+            res.status(500).send({ error: 'Something failed!' });
+        } else {
+            res.redirect('/publishers.html');
+        }
+    });
+});
+
+// Update Publishers
 app.put('/update-publisher', function(req, res){
     let data = req.body;
     let query = "UPDATE Publishers SET name = ?, address = ?, contact = ? WHERE publisherID = ?";
@@ -414,10 +468,11 @@ app.put('/update-publisher', function(req, res){
     });
 });
 
+// Delete Publishers
 app.delete('/delete-publisher', function(req, res){
     let data = req.body;
-    let query = "DELETE FROM Publishers WHERE publisherID = ?";
-    db.pool.query(query, [data.publisherID], function(error, results, fields){
+    let query = `DELETE FROM Publishers WHERE publisherID = ${data['publisherID']};`;
+    db.pool.query(query, function(error, results, fields){
         if(error){
             res.status(500).send({ error: 'Something failed!' });
         } else {
