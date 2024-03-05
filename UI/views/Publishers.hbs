@@ -6,13 +6,8 @@
         <title>Project Library: Publishers</title>
     </head>
     <body>
-        <!-- <p>[<a href="../index.html">Home</a>] [<a href="./authors.html">Authors</a>] [<a href="./publishers.html">Publishers</a>] [<a href="./books.html">Books</a>] [<a href="./borrowers.html">Borrowers</a>] [<a href="./borrowingrecords.html">Borrowing Records</a>] [<a href="./borrowingrecorditems.html">Borrowing Record Items</a>]</p>
-        <h1>Publishers</h1>
-        <h4 id="date"></h4> -->
-
         <header>
             <h1>Publishers</h1>
-            <!-- <h4 id="date"></h4> -->
             <div class="home-links">
             <nav>
                 <ul>
@@ -30,10 +25,10 @@
 
         <main>
             <div>
-                <h2>Browse</h2>
+                <h2>Browse Publishers</h2>
                 Publishers data will populate here.
-  {{!-- Create a table--}}
-                <table id="borrowingRecordsTable">
+                {{!-- Create a table--}}
+                <table id="publishersTable">
 
                     {{!-- Header section --}}
                     <thead>
@@ -63,21 +58,21 @@
             <div>
                 <h2>Add New</h2>
                 <fieldset>
-                    <form method="POST" id="addPublisher">
+                    <form method="POST" id="add-publisher" action="/add-publisher">
                         <span style="margin: 0 10px">
-                            <label for="pubName">Name:</label>
-                            <input type="text" id="pName" name="pName"/>
+                            <label for="newPubName">Name:</label>
+                            <input type="text" id="newPubName" name="newPubName"/>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="pubAddress">Address:</label>
-                            <input type="text" id="pubAddress" name="pubAddress"/>
+                            <label for="newPubAddress">Address:</label>
+                            <input type="text" id="newPubAddress" name="newPubAddress"/>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="pubContact">Contact:</label>
-                            <input type="text" id="pubContact" name="pubContact"/>
+                            <label for="newPubContact">Contact:</label>
+                            <input type="text" id="newPubContact" name="newPubContact"/>
                         </span>
                         <br>
-                        <input type="submit" />
+                        <input type="submit"/>
                     </form>
                 </fieldset>
             </div>

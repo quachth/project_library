@@ -8,7 +8,6 @@
     <body>
         <header>
             <h1>Borrowers</h1>
-            <!-- <h4 id="date"></h4> -->
             <div class="home-links">
             <nav>
                 <ul>
@@ -26,10 +25,10 @@
 
         <main>
             <div>
-                <h2>Browse</h2>
-                Borrowers data will populate here
+                <h2>Browse Borrowers</h2>
+                Borrowers data will populate here.
                 {{!-- Create a table--}}
-                <table id="borrowingRecordsTable">
+                <table id="borrowersTable">
 
                     {{!-- Header section --}}
                     <thead>
@@ -60,22 +59,22 @@
             <div>
                 <h2>Add New</h2>
                 <fieldset>
-                    <form method="POST" id="addBorrower">
+                    <form method="POST" id="add-borrower" action="/add-borrower">
                         <span style="margin: 0 10px">
-                            <label for="firstName">First Name:</label>
-                            <input type="text" id="firstName" name="firstName"/>
+                            <label for="newBorrowerFirst">First Name:</label>
+                            <input type="text" id="newBorrowerFirst" name="newBorrowerFirst"/>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="lastName">Last Name:</label>
-                            <input type="text" id="lastName" name="lastName"/>
+                            <label for="newBorrowerLast">Last Name:</label>
+                            <input type="text" id="newBorrowerLast" name="newBorrowerLast"/>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="email">Email:</label>
-                            <input type="text" id="email" name="email"/>
+                            <label for="newBorrowerEmail">Email:</label>
+                            <input type="text" id="newBorrowerEmail" name="newBorrowerEmail"/>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="phoneNum">Phone Number (15 characters max):</label>
-                            <input type="text" id="phoneNum" name="phoneNum"/>
+                            <label for="newBorrowerPhone">Phone Number (15 characters max):</label>
+                            <input type="text" id="newBorrowerPhone" name="newBorrowerPhone"/>
                         </span>
                         <br>
                         <input type="submit"/>

@@ -23,15 +23,13 @@
             </nav>
             </div>
         </header>
-        <!-- <p>[<a href="../index.html">Home</a>] [<a href="./authors.html">Authors</a>] [<a href="./publishers.html">Publishers</a>] [<a href="./books.html">Books</a>] [<a href="./borrowers.html">Borrowers</a>] [<a href="./borrowingrecords.html">Borrowing Records</a>] [<a href="./borrowingrecorditems.html">Borrowing Record Items</a>]</p> -->
-        <!-- <h4 id="date"></h4> -->
         
         <main>
             <div>
-                <!-- <h2>Browse Authors</h2> -->
-                <h2>Authors data will populate here:</h2>
+                <h2>Browse Authors</h2>
+                Authors data will populate here.
                 {{!-- Create a table--}}
-                <table id="authorTable">
+                <table id="authorsTable">
 
                     {{!-- Header section --}}
                     <thead>
@@ -62,22 +60,22 @@
             <div>
                 <h2>Add New</h2>
                 <fieldset>
-                    <form method="POST" id="addAuthor">
+                    <form method="POST" id="add-author" action="/add-author">
                         <span style="margin: 0 10px">
-                            <label for="authorFirstName">First Name:</label>
-                            <input type="text" id="authorFirstName" name="firstName"/>
+                            <label for="newAuthorFirst">First Name:</label>
+                            <input type="text" id="newAuthorFirst" name="newAuthorFirst"/>
                             </span>
                             <span style="margin: 0 10px">
-                                <label for="authorLastName">Last Name:</label>
-                                <input type="text" id="authorLastName" name="lastName"/>
+                                <label for="newAuthorLast">Last Name:</label>
+                                <input type="text" id="newAuthorLast" name="newAuthorLast"/>
                             </span>
                             <span style="margin: 0 10px">
-                                <label for="nationality">Nationality:</label>
-                                <input type="text" id="nationality" name="nationality"/>
+                                <label for="newNationality">Nationality:</label>
+                                <input type="text" id="newNationality" name="newNationality"/>
                             </span>
                             <span style="margin: 0 10px">
-                                <label for="birthdate">Birthdate:</label>
-                                <input type="date" id="birthdate" name="birthdate"/>
+                                <label for="newBirthdate">Birthdate:</label>
+                                <input type="date" id="newBirthdate" name="newBirthdate"/>
                             </span>
                             <br>
                             <input type="submit">
@@ -90,34 +88,32 @@
                 <h2>Update</h2>
                 <fieldset>
                     <form method="POST" id="updateAuthor">
+
                         <span style="margin: 0 10px">
-                            <label for="authorFullNameU">Author:</label>
-                            <input type="text" id="authorFullNameU" name="authorFullNameU" list="authorsU" autocomplete="off">
-                            <datalist id="authorsU">
-                                <option value="Kiera Cass"></option>
-                                <option value="Alexandre Dumas"></option>
-                                <option value="Alexandre Dumas"></option>
+                            <label for="updateAuthorFullName">Author:</label>
+                            <input type="text" id="updateAuthorFullName" name="updateAuthorFullName" list="authors" autocomplete="off" size="30">
+                            <datalist id="authors">
+                                <option value="">Select an Author</option>
+                                {{#each authors}}
+                                <option value="{{this.authorID}}">{{this.fullAuthorName}} - {{this.birthdate}}</option>
+                                {{/each}}
                             </datalist>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="authorIDU">ID:</label>
-                            <input type="text" id="authorIDU" name="authorIDU" value="1" readonly/>
+                            <label for="updateAuthorFirst">First Name:</label>
+                            <input type="text" id="updateAuthorFirst" name="updateAuthorFirst"/>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="authorFNameU">First Name:</label>
-                            <input type="text" id="authorFNameU" name="authorFNameU" value="Kiera"/>
+                            <label for="updateAuthorLast">Last Name:</label>
+                            <input type="text" id="updateAuthorLast" name="updateAuthorLast"/>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="authorLNameU">Last Name:</label>
-                            <input type="text" id="authorLNameU" name="authorLNameU" value="Cass"/>
+                            <label for="updateNationality">Nationality:</label>
+                            <input type="text" id="updateNationality" name="updateNationality"/>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="nationalityU">Nationality:</label>
-                            <input type="text" id="nationalityU" name="nationalityU" value="American"/>
-                        </span>
-                        <span style="margin: 0 10px">
-                            <label for="birthdateU">Birthdate:</label>
-                            <input type="date" id="birthdateU" name="birthdateU" value="1981-05-19"/>
+                            <label for="updateBirthdate">Birthdate:</label>
+                            <input type="date" id="updateBirthdate" name="updateBirthdate"/>
                         </span>
                         <br>
                         <input type="submit" onclick="return confirm('Are you sure you want to update this author?')"/>
