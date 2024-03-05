@@ -65,6 +65,26 @@ app.get('/authors.html', function(req, res) {                              // Th
 // Add Author
 app.post('/add-author', function(req, res){
     let data = req.body;
+
+    // Validate input
+    if (data.newAuthorFirst === null || data.newAuthorFirst === ""){
+        console.log('No first name entered.');
+        return res.redirect('/authors.html');
+    }
+    if (data.newAuthorLast === null || data.newAuthorLast === ""){
+        console.log('No last name entered.');
+        return res.redirect('/authors.html');
+    }
+    if (data.newNationality === null || data.newNationality === ""){
+        console.log('No nationality entered.');
+        return res.redirect('/authors.html');
+    }
+    if (data.newBirthdate === null || data.newBirthdate === ""){
+        console.log('No birthdate entered.');
+        return res.redirect('/authors.html');
+    }
+
+
     queryAddAuthor = `INSERT INTO Authors (firstName, lastName, nationality, birthdate) VALUES ('${data['newAuthorFirst']}','${data['newAuthorLast']}', '${data['newNationality']}', '${data['newBirthdate']}');`;
     db.pool.query(queryAddAuthor, function(error, rows, fields) {
         if(error){
@@ -76,15 +96,35 @@ app.post('/add-author', function(req, res){
 });
 
 // Update Author
-app.put('/update-author/', function(req, res) {
+app.put('/update-author', function(req, res, next) {
     let data = req.body;
-    let authorID = req.params.id;
-    let query = "UPDATE Authors SET firstName = ?, lastName = ?, nationality = ?, birthdate = ? WHERE authorID = ?";
-    db.pool.query(query, [data.firstName, data.lastName, data.nationality, data.birthdate, authorID], function(error, results, fields) {
+
+    let authorID = parseInt(data.authorID);
+    let firstName = data.firstName;
+    let lastName = data.lastName;
+    let nationality = data.nationality;
+    let birthdate = new Date(data.birthdate);
+
+    let queryUpdateAuthor = `UPDATE Authors SET firstName = ?, lastName= ?, nationality = ?, birthdate = ? WHERE Authors.authorID = ?;`;
+    let queryShowUpdate = `SELECT * FROM Authors WHERE Authors.authorID = ?;`;
+
+    // 1st Query
+    db.pool.query(queryUpdateAuthor, [firstName, lastName, nationality, birthdate, authorID], function(error, rows, fields) {
         if (error) {
             res.status(500).send({ error: 'Something failed!' });
         }
-        res.status(200).send({ success: 'Author updated' });
+        else {
+            // 2nd Query to send updated rows
+            db.pool.query(queryShowUpdate, [authorID], function(error, rows, fields) {
+                if (error) {
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                else {
+                    res.send(rows);
+                }
+            })
+        }
     });
 });
 
@@ -138,6 +178,20 @@ app.get('/books.html', function(req, res)
 app.post('/add-book', function(req, res){
     let data = req.body;
     
+    // Input validation - no null/undefined attributes
+    if (data.newTitle === null || data.newTitle === "") {
+        console.log('No title given.');
+        return res.redirect('/books.html');
+    }
+    if (data.newIsbn === null || data.newIsbn === "") {
+        console.log('No ISBN given.');
+        return res.redirect('/books.html');
+    }
+    if (data.newBookGenre === null || data.newBookGenre === "") {
+        console.log('No genre given.');
+        return res.redirect('/books.html');
+    }
+
     // Capture NULL values from Publisher field
     let publisher = parseInt(data.newBookPub);
     if (isNaN(publisher)) {
@@ -155,14 +209,36 @@ app.post('/add-book', function(req, res){
 });
 
 // Update Books
-app.post('/update-book', function(req, res){
+app.put('/update-book', function(req, res, next) {
     let data = req.body;
-    let query = "UPDATE Books SET title = ?, authorID = ?, isbn = ?, publisherID = ?, genre = ? WHERE bookID = ?";
-    db.pool.query(query, [data.title, data.authorID, data.isbn, data.publisherID, data.genre, data.bookID], function(error, results){
+
+    let bookID = parseInt(data.bookID);
+    let authorID = parseInt(data.authorID);
+    let publisherID = parseInt(data.publisherID);
+    
+    // Change 0 publisherID to null for database
+    if (publisherID == 0) {
+        publisherID = null;
+    }
+
+    let queryUpdateBook = `UPDATE Books SET title = ?, authorID = ?, isbn = ?, publisherID = ?, genre = ? WHERE bookID = ?;`;
+    let queryShowUpdate = `SELECT * FROM Books WHERE Books.bookID = ?;`;
+    
+    // 1st query for update
+    db.pool.query(queryUpdateBook, [data.title, authorID, data.isbn, publisherID, data.genre, bookID], function(error, rows, fields) {
         if(error){
             res.sendStatus(500).send({ error: 'Something failed!' });
         } else {
-            res.redirect('/books.html');
+            // 2nd query to send updated row
+            db.pool.query(queryShowUpdate, [bookID], function(error, rows, fields) {
+                if (error) {
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                else{
+                    res.send(rows);
+                }
+            })
         }
     });
 });
@@ -187,8 +263,8 @@ app.delete('/delete-book', function(req, res, next){
 // Browse Borrowers
 app.get('/borrowers.html', function(req, res)                                                   // This is the basic syntax for what is called a 'route'
     {
-        let query1 = "SELECT * FROM Borrowers;";                                                // Browse query for Borrowers
-        db.pool.query(query1, function(error, rows, fields) {
+        let queryBrowseBorrowers = "SELECT * FROM Borrowers;";                                                // Browse query for Borrowers
+        db.pool.query(queryBrowseBorrowers, function(error, rows, fields) {
             res.render('Borrowers', {data: rows});                                              // Render the Borrowers.hbs file, and also send the renderer an object where 'data' is equal to the 'rows' we received back from the query
         })        
 });
@@ -196,6 +272,25 @@ app.get('/borrowers.html', function(req, res)                                   
 // Add Borrowers
 app.post('/add-borrower', function(req, res){
     let data = req.body;
+
+    // Input validation - no null/undefined attributes
+    if (data.newBorrowerFirst === null || data.newBorrowerFirst === "") {
+        console.log('No first name given.');
+        return res.redirect('/borrowers.html');
+    }
+    if (data.newBorrowerLast === null || data.newBorrowerLast === "") {
+        console.log('No last name given.');
+        return res.redirect('/borrowers.html');
+    }
+    if (data.newBorrowerEmail === null || data.newBorrowerEmail === "") {
+        console.log('No email given.');
+        return res.redirect('/borrowers.html');
+    }
+    if (data.newBorrowerPhone === null || data.newBorrowerPhone === "") {
+        console.log('No phone number given.');
+        return res.redirect('/borrowers.html');
+    }
+
     let queryAddBorrower = `INSERT INTO Borrowers (firstName, lastName, email, phoneNum) VALUES ('${data['newBorrowerFirst']}', '${data['newBorrowerLast']}', '${data['newBorrowerEmail']}', '${data['newBorrowerPhone']}')`;
     db.pool.query(queryAddBorrower, function(error, rows, fields){
         if(error){
@@ -207,14 +302,29 @@ app.post('/add-borrower', function(req, res){
 });
 
 // Update Borrowers
-app.put('/update-borrower', function(req, res){
+app.put('/update-borrower', function(req, res, next){
     let data = req.body;
-    let query = "UPDATE Borrowers SET firstName = ?, lastName = ?, email = ?, phoneNum = ? WHERE borrowerID = ?";
-    db.pool.query(query, [data.firstName, data.lastName, data.email, data.phoneNum, data.borrowerID], function(error, results, fields){
+
+    let borrowerID = parseInt(data.borrowerID);
+
+    let queryUpdateBorrower = `UPDATE Borrowers SET firstName = ?, lastName = ?, email = ?, phoneNum = ? WHERE borrowerID = ?;`;
+    let queryShowUpdate = `SELECT * FROM Borrowers WHERE Borrowers.borrowerID = ?;`;
+    
+    // 1st query to update
+    db.pool.query(queryUpdateBorrower, [data.firstName, data.lastName, data.email, data.phoneNum, borrowerID], function(error, rows, fields){
         if(error){
             res.status(500).send({ error: 'Something failed!' });
         } else {
-            res.redirect('/borrowers.html');
+            //2nd query to show update
+            db.pool.query(queryShowUpdate, [borrowerID], function(error, rows, fields){
+                if (error) {
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                else {
+                    res.send(rows);
+                }
+            })
         }
     });
 });
@@ -267,10 +377,25 @@ app.get('/borrowingrecords.html', function(req, res){                           
 app.post('/add-record-form', function(req, res){
     //Capture incoming data and parse it back to a JS object
     let data = req.body;
+    borrowerID = parseInt(data.inputBorrower);
+
+    // Input validation for no null/undefined values
+    if (borrowerID === null || borrowerID === 0) {
+        console.log('No borrower selected.');
+        return res.redirect('/borrowingrecords.html');
+    }
+    if (data.newBorrowDate === null || data.newBorrowDate === "") {
+        console.log('No borrow date specified.');
+        return res.redirect('/borrowingrecords.html');
+    }
+    if (data.newReturnDate === null || data.newReturnDate === "") {
+        console.log('No return date specified.');
+        return res.redirect('/borrowingrecords.html');
+    }
 
     //Create the query and run it on the database
-    query1 = `INSERT INTO BorrowingRecords (borrowerID, borrowDate, returnDate) VALUES ('${data['inputBorrower']}', '${data['newBorrowDate']}', '${data['newReturnDate']}')`;
-    db.pool.query(query1, function(error, rows, fields){
+    queryAddRecord = `INSERT INTO BorrowingRecords (borrowerID, borrowDate, returnDate) VALUES ('${data['inputBorrower']}', '${data['newBorrowDate']}', '${data['newReturnDate']}')`;
+    db.pool.query(queryAddRecord, function(error, rows, fields){
         //Check for errors
         if (error) {
             //Log error to terminal and set response 400 to indicate bad request
@@ -278,10 +403,10 @@ app.post('/add-record-form', function(req, res){
             res.sendStatus(400);
         }
         else {
-            query2 = "SELECT BorrowingRecords.recordID, CONCAT(Borrowers.firstName, ' ', Borrowers.lastName) AS fullName, BorrowingRecords.borrowDate, BorrowingRecords.returnDate\
+            queryShowAdd = "SELECT BorrowingRecords.recordID, CONCAT(Borrowers.firstName, ' ', Borrowers.lastName) AS fullName, BorrowingRecords.borrowDate, BorrowingRecords.returnDate\
             FROM BorrowingRecords\
             INNER JOIN Borrowers ON BorrowingRecords.borrowerID=Borrowers.borrowerID;" 
-            db.pool.query(query2, function(error, rows, fields){
+            db.pool.query(queryShowAdd, function(error, rows, fields){
                 if(error){
                     console.log(error);
                     res.sendStatus(400);
@@ -299,6 +424,7 @@ app.delete('/delete-record-form', function(req, res, next){
 
     let data = req.body;
     let recordID = parseInt(data.id);
+
     let deleteBorrowingRecord = "DELETE FROM BorrowingRecords WHERE recordID = ?";
 
     // Run query - deletion will cascade on intersection table
@@ -441,8 +567,9 @@ app.delete('/delete-record-item', function(req, res, next){
 // Browse Publishers
 app.get('/publishers.html', function(req, res)                                                   // This is the basic syntax for what is called a 'route'
     {
-        let query1 = "SELECT * FROM Publishers;";                                                // Browse query for Publishers
-        db.pool.query(query1, function(error, rows, fields) {
+        // Browse query for Publishers
+        let queryBrowsePublishers = "SELECT * FROM Publishers;";
+        db.pool.query(queryBrowsePublishers, function(error, rows, fields) {
             res.render('Publishers', {data: rows});                                              // Render the Publishers.hbs file, and also send the renderer an object where 'data' is equal to the 'rows' we received back from the query
         })        
 });
@@ -450,6 +577,21 @@ app.get('/publishers.html', function(req, res)                                  
 // Add Publishers
 app.post('/add-publisher', function(req, res){
     let data = req.body;
+
+    // Input validation - no null/undefined attributes
+    if (data.newPubName === null || data.newPubName === "") {
+        console.log('No name given.');
+        return res.redirect('/publishers.html');
+    }
+    if (data.newPubAddress === null || data.newPubAddress === "") {
+        console.log('No address given.');
+        return res.redirect('/publishers.html');
+    }
+    if (data.newPubContact === null || data.newPubContact === "") {
+        console.log('No contact information given.');
+        return res.redirect('/publishers.html');
+    }
+
     let queryAddPublisher = `INSERT INTO Publishers (name, address, contact) VALUES ('${data['newPubName']}', '${data['newPubAddress']}', '${data['newPubContact']}');`;
 
     db.pool.query(queryAddPublisher, function(error, rows, fields) {
@@ -462,14 +604,32 @@ app.post('/add-publisher', function(req, res){
 });
 
 // Update Publishers
-app.put('/update-publisher', function(req, res){
+app.put('/update-publisher', function(req, res, next){
     let data = req.body;
-    let query = "UPDATE Publishers SET name = ?, address = ?, contact = ? WHERE publisherID = ?";
-    db.pool.query(query, [data.name, data.address, data.contact, data.publisherID], function(error, results, fields){
+
+    let publisherID = parseInt(data.publisherID);
+    let name = data.name;
+    let address = data.address;
+    let contact = data.contact;
+
+    let queryUpdatePublisher = `UPDATE Publishers SET name = ?, address = ?, contact = ? WHERE publisherID = ?;`;
+    let queryShowUpdate = `SELECT * FROM Publishers WHERE Publishers.publisherID = ?;`;
+
+    // 1st Query
+    db.pool.query(queryUpdatePublisher, [name, address, contact, publisherID], function(error, rows, fields){
         if(error){
             res.status(500).send({ error: 'Something failed!' });
         } else {
-            res.redirect('/publishers.html');
+            // 2nd query to show update
+            db.pool.query(queryShowUpdate, [publisherID], function(error, rows, fields) {
+                if (error) {
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                else {
+                    res.send(rows);
+                }
+            })
         }
     });
 });
