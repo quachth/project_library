@@ -88,15 +88,17 @@ app.put('/update-author/', function(req, res) {
     });
 });
 
-app.post('/delete-author', function(req, res){
+// Delete Author
+app.delete('/delete-author', function(req, res, next){
     let data = req.body;
-    let authorID = req.params.id;
-    let query = "DELETE FROM Authors WHERE authorID = ?";
-    db.pool.query(query, [data.authorID], function(error, results){
+    let authorID = parseInt(data.authorID);
+    let queryDeleteAuthor = "DELETE FROM Authors WHERE authorID = ?";
+    db.pool.query(queryDeleteAuthor, [data.authorID], function(error, rows, fields){
         if(error){
+            console.log(error);
             res.sendStatus(500);
         } else {
-            res.redirect('/authors.html');
+            res.sendStatus(204);
         }
     });
 });
@@ -166,14 +168,16 @@ app.post('/update-book', function(req, res){
 });
 
 // Delete Book
-app.post('/delete-book', function(req, res){
+app.delete('/delete-book', function(req, res, next){
     let data = req.body;
-    let query = "DELETE FROM Books WHERE bookID = ?";
-    db.pool.query(query, [data.bookID], function(error, results){
+    let bookID = parseInt(data.bookID);
+    let queryDeleteBook = "DELETE FROM Books WHERE bookID = ?";
+    db.pool.query(queryDeleteBook, [bookID], function(error, rows, fields){
         if(error){
+            console.log(error);
             res.sendStatus(500).send({ error: 'Something failed!' });
         } else {
-            res.redirect('/books.html');
+            res.sendStatus(204);
         }
     });
 });
@@ -216,14 +220,16 @@ app.put('/update-borrower', function(req, res){
 });
 
 // Delete Borrowers
-app.delete('/delete-borrower', function(req, res){
+app.delete('/delete-borrower', function(req, res,next){
     let data = req.body;
-    let query = "DELETE FROM Borrowers WHERE borrowerID = ?";
-    db.pool.query(query, [data.borrowerID], function(error, results, fields){
+    let borrowerID = parseInt(data.borrowerID);
+    let queryDeleteBorrower = "DELETE FROM Borrowers WHERE borrowerID = ?";
+    db.pool.query(queryDeleteBorrower, [borrowerID], function(error, rows, fields){
         if(error){
+            console.log(error);
             res.status(500).send({ error: 'Something failed!' });
         } else {
-            res.redirect('/borrowers.html');
+            res.sendStatus(204);
         }
     });
 });
@@ -233,7 +239,7 @@ app.delete('/delete-borrower', function(req, res){
 //Browse Records
 app.get('/borrowingrecords.html', function(req, res){                                                    // This is the basic syntax for what is called a 'route'
     // Query 1 to populate Browse table
-    let query1 = "SELECT BorrowingRecords.recordID, CONCAT(Borrowers.firstName, ' ', Borrowers.lastName) AS fullName, BorrowingRecords.borrowDate, BorrowingRecords.returnDate\
+    let query1 = "SELECT BorrowingRecords.recordID, CONCAT(Borrowers.firstName, ' ', Borrowers.lastName) AS fullName,  BorrowingRecords.borrowDate, BorrowingRecords.returnDate\
                 FROM BorrowingRecords\
                 INNER JOIN Borrowers ON BorrowingRecords.borrowerID=Borrowers.borrowerID\
                 ORDER BY BorrowingRecords.recordID;";                                                // Browse query for Borrowing Records; Order By is needed to sort table by RecordID, otherwise it sorts by the borrowerID.
@@ -469,14 +475,15 @@ app.put('/update-publisher', function(req, res){
 });
 
 // Delete Publishers
-app.delete('/delete-publisher', function(req, res){
+app.delete('/delete-publisher', function(req, res, next){
     let data = req.body;
-    let query = `DELETE FROM Publishers WHERE publisherID = ${data['publisherID']};`;
-    db.pool.query(query, function(error, results, fields){
+    let publisherID = parseInt(data.publisherID);
+    let queryDeletePublisher = "DELETE FROM Publishers WHERE publisherID = ? ";
+    db.pool.query(queryDeletePublisher, [publisherID], function(error, results, fields){
         if(error){
             res.status(500).send({ error: 'Something failed!' });
         } else {
-            res.redirect('/publishers.html');
+            res.sendStatus(204);
         }
     });
 });
