@@ -61,8 +61,9 @@
 
             <div>
                 <h2>Add New</h2>
+                All fields must be filled in for entry to be added.
                 <fieldset>
-                    <form method="POST" id="add-borrower" action="/add-borrower">
+                    <form method="POST" id="addBorrower" action="/add-borrower">
                         <span style="margin: 0 10px">
                             <label for="newBorrowerFirst">First Name:</label>
                             <input type="text" id="newBorrowerFirst" name="newBorrowerFirst"/>
@@ -87,40 +88,38 @@
 
             <div>
                 <h2>Update</h2>
+                All fields must be filled in for entry to be updated. If deleted books are still present on dropdown search menu, please refresh the page to get an updated dropdown.
                 <fieldset>
-                    <form method="POST" id="updateBorrower">
+                    <form id="updateBorrowerForm">
                         <span style="margin: 0 10px">
-                            <label for="borrowerFullNameU">Borrower:</label>
-                            <input type="text" id="borrowerFullNameU" name="borrowerFullNameU" list="borrowersU" autocomplete="off">
-                            <datalist id="borrowersU">
-                                <option value="Celeste Newsome"></option>
-                                <option value="Max Smith"></option>
-                                <option value="Lianghui Wang"></option>
+                            <label for="updateBorrowerFullName">Borrower:</label>
+                            <input type="text" id="selectBorrower" name="updateBorrowerFullName" list="data" autocomplete="off" placeholder="Select Borrower">
+                            <datalist id="data">
+                                {{#each data}}
+                                <option value="{{this.borrowerID}}">{{this.firstName}} {{this.lastName}}</option>
+                                {{/each}}
                             </datalist>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="borrowerIDU">ID:</label>
-                            <input type="text" id="borrowerIDU" name="borrowerIDU" value="1" readonly/>
+                            <label for="updateBorrowerFirst">First Name:</label>
+                            <input type="text" id="updateBorrowerFirst" name="updateBorrowerFirst"/>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="borrowerFNameU">First Name:</label>
-                            <input type="text" id="borrowerFNameU" name="borrowerFNameU" value="Celeste"/>
+                            <label for="updateBorrowerLast">Last Name:</label>
+                            <input type="text" id="updateBorrowerLast" name="updateBorrowerLast"/>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="borrowerLNameU">Last Name:</label>
-                            <input type="text" id="borrowerLNameU" name="borrowerLNameU" value="Newsome"/>
+                            <label for="updateEmail">Email:</label>
+                            <input type="text" id="updateEmail" name="updateEmail"/>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="emailU">Email:</label>
-                            <input type="text" id="emailU" name="emailU" value="cnewsome@tmail.com"/>
-                        </span>
-                        <span style="margin: 0 10px">
-                            <label for="phoneNumU">Phone Number:</label>
-                            <input type="text" id="birthdateU" name="birthdateU" value="111-222-3344"/>
+                            <label for="updatePhone">Phone Number:</label>
+                            <input type="text" id="updatePhone" name="updatePhone"/>
                         </span>
                         <br>
                         <input type="submit" onclick="return confirm('Are you sure you want to update this borrower?')"/>
                     </form>
+                    <script src="./js/updateBorrowers.js"></script>
                 </fieldset>
             </div>
         </main>

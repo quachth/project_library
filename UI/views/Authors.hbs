@@ -62,8 +62,9 @@
 
             <div>
                 <h2>Add New</h2>
+                All fields must be filled.
                 <fieldset>
-                    <form method="POST" id="add-author" action="/add-author">
+                    <form method="POST" id="addAuthor" action="/add-author">
                         <span style="margin: 0 10px">
                             <label for="newAuthorFirst">First Name:</label>
                             <input type="text" id="newAuthorFirst" name="newAuthorFirst"/>
@@ -89,14 +90,13 @@
 
             <div>
                 <h2>Update</h2>
+                All fields must be filled. If deleted authors are still present on dropdown search menu, please refresh the page to get an updated dropdown.
                 <fieldset>
-                    <form method="POST" id="updateAuthor">
-
+                    <form id="updateAuthorForm">
                         <span style="margin: 0 10px">
                             <label for="updateAuthorFullName">Author:</label>
-                            <input type="text" id="updateAuthorFullName" name="updateAuthorFullName" list="authors" autocomplete="off" size="30">
+                            <input type="text" id="selectAuthorToUpdate" name="updateAuthorFullName" list="authors" autocomplete="off" size="30" placeholder="Select Author">
                             <datalist id="authors">
-                                <option value="">Select an Author</option>
                                 {{#each authors}}
                                 <option value="{{this.authorID}}">{{this.fullAuthorName}} - {{this.birthdate}}</option>
                                 {{/each}}
@@ -121,6 +121,7 @@
                         <br>
                         <input type="submit" onclick="return confirm('Are you sure you want to update this author?')"/>
                     </form>
+                    <script src="./js/updateAuthor.js"></script>
                 </fieldset>
             </div>
         </main>

@@ -26,6 +26,7 @@
         <main>
             <div>
                 <h2>Browse Records</h2>
+                <p> Borrowing records will populate here. 
                 {{!-- Create a table--}}
                 <table id="borrowingRecordsTable">
 
@@ -59,12 +60,15 @@
             
             <div>
                 <h2>Add New</h2>
-                <p> To add a new borrowing record, please enter the borrower's name, borrow date, and return date below, and click Submit.</p>
+                <p> To add a new borrowing record, please enter the borrower's name, borrow date, and return date below, and click Submit.
+                All fields must be filled in.
+                </p>
+                
                 <fieldset>
                     <form id="addBorrowingRecordForm" method="POST" action="/add-record-form">
                         <span style="margin: 0 10px">
                             <label for="inputBorrower">Borrower:</label>
-                            <input type="text" id="inputBorrower" name="inputBorrower" list="borrowers" autocomplete="off" size="30">
+                            <input type="text" id="inputBorrower" name="inputBorrower" list="borrowers" autocomplete="off" size="30" placeholder="Select Borrower for Record">
                             <datalist id="borrowers">
                                 <option value="">Select a Borrower</option>
                                 {{#each borrowers}}

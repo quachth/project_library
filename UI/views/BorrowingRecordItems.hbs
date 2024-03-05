@@ -25,8 +25,9 @@
 
         <main>
             <div>
-                <h2>Browse</h2>
-                Only one copy of an item is allowed per record. To re-borrow an item, please create a new record for the borrower. Otherwise, a bad request will be returned.
+                <h2>Browse Record Items</h2>
+                <p>Records and their corresponding book items will populate here.</p>
+                <p>Only one copy of an item is allowed per record. To re-borrow an item, please create a new record for the borrower. Otherwise, a bad request will be returned.</p>
                 {{!-- Create a table--}}
                 <table id="borrowingRecordItemsTable">
 
@@ -60,6 +61,7 @@
             
             <div>
                 <h2>Add New</h2>
+                Using the table above, please select the ID number of the record and the ID number of the book item to be added to that record.
                 <fieldset>
                     <form method="POST" id="addRecordItem" action="/add-record-item-form">
                         <label for="recordItemIDs">Record ID:</label>

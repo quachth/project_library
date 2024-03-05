@@ -65,9 +65,9 @@
 
             <div>
                 <h2>Add New</h2>
-                * Note: For items with no known publisher, please select first option 'No Publisher'. *
+                For items with no known publisher, please select first option 'No Publisher'. Optionally, you may leave the field blank.
                 <fieldset>
-                    <form method="POST" id="add-book" action="/add-book">
+                    <form method="POST" id="addBook" action="/add-book">
                         <span style="margin: 0 10px">
                             <label for="newTitle">Title:</label>
                             <input type="text" id="newTitle" name="newTitle"/>
@@ -109,55 +109,55 @@
 
             <div>
                 <h2>Update</h2>
+                All fields must be filled for book item to be updated. If removing publisher from item, please select 'No Publisher' option. Optionally, you may leave the field blank.
+                <p>* Note: Browsing table will be updated with numerical values. Please refresh the page for the corresponding informative strings *</p>
                 <fieldset>
-                    <form method="POST" id="updateBook">
+                    <form id="updateBookForm"> 
                         <span style="margin: 0 10px">
-                            <label for="titleU">Book Title:</label>
-                            <input type="text" id="titleU" name="titleU" list="booksU" autocomplete="off">
-                            <datalist id="booksU">
-                                <option value="The Selection"></option>
-                                <option value="The Count of Monte Cristo"></option>
-                                <option value="Lady of the Camellias"></option>
+                            <label for="updateBookFull">Book Title:</label>
+                            <input type="text" id="selectBook" name="updateBookFull" list="data" autocomplete="off" placeholder="Select book to update">
+                            <datalist id="data">
+                                {{#each data}}
+                                <option value="{{this.bookID}}">{{this.title}}</option>
+                                {{/each}}
                             </datalist>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="bookIDU">ID:</label>
-                            <input type="text" id="bookIDU" name="bookIDU" value="1" readonly/>
+                            <label for="updateTitle">Title:</label>
+                            <input type="text" id="updateTitle" name="updateTitle">
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="bookTitleU">Title:</label>
-                            <input type="text" id="bookTitleU" name="bookTitleU" value="The Selection"/>
-                        </span>
-                        <span style="margin: 0 10px">
-                            <label for="bookAuthorUp">Author:</label>
-                            <input type="text" id="bookAuthorUp" name="bookAuthorUp" list="bookAuthorsU" autocomplete="off" value="Kiera Cass">
-                            <datalist id="bookAuthorsU">
-                                <option value="Kiera Cass"></option>
-                                <option value="Alexandre Dumas"></option>
-                                <option value="Alexandre Dumas"></option>
+                            <label for="updateBookAuthor">Author:</label>
+                            <input type="text" id="selectBookAuthor" name="updateBookAuthor" list="authors" autocomplete="off" placeholder="Select author for update">
+                            <datalist id="authors">
+                                {{#each authors}}
+                                <option value="{{this.authorID}}">{{this.authorName}} - {{this.birthdate}} </option>
+                                {{/each}}
                             </datalist>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="isbnU">ISBN:</label>
-                            <input type="text" id="isbnU" name="isbnU" value="978-0062059949"/>
+                            <label for="updateISBN">ISBN:</label>
+                            <input type="text" id="updateISBN" name="updateISBN"/>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="bookPublisherU">Publisher:</label>
-                            <input type="text" id="bookPublisherU" name="bookPublisherU" list="bookPublishersU" autocomplete="off" placeholder="HarperCollins">
-                            <datalist id="bookPublishersU">
-                                <option value="NULL"></option>
-                                <option value="HarperCollins Publisher"></option>
-                                <option value="Penguin Classics"></option>
-                                <option value="Dover Publications"></option>
+                            <label for="updateBookPub">Publisher:</label>
+                            <input type="text" id="selectBookPub" name="updateBookPub" list="publishers" autocomplete="off" placeholder="Select publisher for update">
+                            <datalist id="publishers">
+                                <option value=NULL><i>No Publisher</i></option>
+                                {{#each publishers}}
+                                <option value="{{this.publisherID}}">{{this.name}}</option>
+                                {{/each}}
                             </datalist>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="genreU">Genre:</label>
-                            <input type="text" id="genreU" name="genreU" value="fantasy"/>
+                            <label for="updateGenre">Genre:</label>
+                            <input type="text" id="updateGenre" name="updateGenre"/>
                         </span>
                         <br>
                         <input type="submit" onclick="return confirm('Are you sure you want to update this book?')"/>
+
                     </form>
+                    <script src="./js/updateBook.js"></script>
                 </fieldset>
             </div>
         </main>

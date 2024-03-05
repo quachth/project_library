@@ -60,8 +60,9 @@
             
             <div>
                 <h2>Add New</h2>
+                All fields must be filled in for entry to be added.
                 <fieldset>
-                    <form method="POST" id="add-publisher" action="/add-publisher">
+                    <form method="POST" id="addPublisher" action="/add-publisher">
                         <span style="margin: 0 10px">
                             <label for="newPubName">Name:</label>
                             <input type="text" id="newPubName" name="newPubName"/>
@@ -82,36 +83,34 @@
 
             <div>
                 <h2>Update</h2>
+                All entries must be filled in for entry to be updated. If deleted publishers are still present on dropdown search menu, please refresh the page to get an updated dropdown.
                 <fieldset>
-                    <form method="POST" id="updatePublisher">
+                    <form id="updatePublisherForm">
                         <span style="margin: 0 10px">
-                            <label for="pubSelectNameU">Publisher:</label>
-                            <input type="text" id="pubSelectNameU" name="pubSelectNameU" list="publishersU" autocomplete="off">
-                            <datalist id="publishersU">
-                                <option value="HarperCollins Publisher"></option>
-                                <option value="Penguin Classics"></option>
-                                <option value="Dover Publications"></option>
+                            <label for="updatePublisherFull">Publisher:</label>
+                            <input type="text" id="selectPublisher" name="updatePublisherFull" list="data" autocomplete="off" placeholder = "Select Publisher">
+                            <datalist id="data">
+                                {{#each data}}
+                                <option value="{{this.publisherID}}">{{this.name}}</option>
+                                {{/each}}
                             </datalist>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="publisherIDU">ID:</label>
-                            <input type="text" id="publisherIDU" name="publisherIDU" value="1" readonly/>
-                        </span>
-                        <span style="margin: 0 10px">
                             <label for="pubNameU">Name:</label>
-                            <input type="text" id="pubNameU" name="pubNameU" value="HarperCollins Publisher"/>
+                            <input type="text" id="updatePubName" name="updatePubName"/>
                         </span>
                         <span style="margin: 0 10px">
                             <label for="pubAddress">Address:</label>
-                            <input type="text" id="pubAddressU" name="pubAddressU" value="195 Broadway, New York, NY 10007"/>
+                            <input type="text" id="updatePubAddress" name="updatePubAddress"/>
                         </span>
                         <span style="margin: 0 10px">
                             <label for="pubContact">Contact:</label>
-                            <input type="text" id="pubContactU" name="pubContact" value="1-800-242-7737"/>
+                            <input type="text" id="updatePubContact" name="updatePubContact"/>
                         </span>
                         <br>
                         <input type="submit" onclick="return confirm('Are you sure you want to update this publisher?')"/>
                     </form>
+                    <script src="./js/updatePublisher.js"></script>
                 </fieldset>
             </div>
         </main>
