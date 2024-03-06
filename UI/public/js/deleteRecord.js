@@ -5,7 +5,7 @@ Citation(s):
     Date: 2/28/24
     Adapted from the starter code template from the github Nodejs starter app guide provided by Professor Curry and Professor Safonte from Oregon State University.
     Appropriate variables were changed for deleteRecord.js function 
-    Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
+    Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%207%20-%20Dynamically%20Deleting%20Data
 */
 
 function deleteRecord(recordID) {
