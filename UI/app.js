@@ -157,7 +157,7 @@ app.get('/books.html', function(req, res)
         // Query to dynamically populate Authors dropdown menu
         let queryDropdownAuthors = "SELECT authorID, CONCAT(firstName, ' ', lastName) AS fullAuthorName, birthdate FROM Authors;";
         //Query to dynamically populate Authors dropdown menu
-        let queryDropdownPubs = "SELECT publisherID, name FROM Publishers;";
+        let queryDropdownPubs = "SELECT publisherID, name FROM Publishers ORDER BY name;";
 
         // 1st Query
         db.pool.query(queryBrowseBooks, function(error, rows, fields) {
@@ -355,7 +355,7 @@ app.get('/borrowingrecords.html', function(req, res){                           
                 ORDER BY BorrowingRecords.recordID;";                                                // Browse query for Borrowing Records; Order By is needed to sort table by RecordID, otherwise it sorts by the borrowerID.
     
     // Query 2 to populate dynamic drop down menu/search for Borrower names
-    let query2 = "SELECT borrowerID, CONCAT(firstName, ' ', lastName) AS fullName, email FROM Borrowers;";
+    let query2 = "SELECT borrowerID, CONCAT(firstName, ' ', lastName) AS fullName, email FROM Borrowers ORDER BY lastName, firstName;";
 
     db.pool.query(query1, function(error, rows, fields) {
 
@@ -394,7 +394,7 @@ app.post('/add-record-form', function(req, res){
     }
 
     //Create the query and run it on the database
-    queryAddRecord = `INSERT INTO BorrowingRecords (borrowerID, borrowDate, returnDate) VALUES ('${data['inputBorrower']}', '${data['newBorrowDate']}', '${data['newReturnDate']}')`;
+    queryAddRecord = `INSERT INTO BorrowingRecords (borrowerID, borrowDate, returnDate) VALUES ('${data['inputBorrower']}', '${data['newBorrowDate']}', '${data['newReturnDate']}');`;
     db.pool.query(queryAddRecord, function(error, rows, fields){
         //Check for errors
         if (error) {
