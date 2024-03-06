@@ -4,7 +4,7 @@ Project Name: Project Library
 Citation(s): 
     Date: 3/3/24
     Adapted from the starter code template from the github Nodejs starter app guide provided by Professor Curry and Professor Safonte from Oregon State University.
-    Appropriate variables were changed for updateRecord.js function 
+    Appropriate variables were changed for updateAuthor.js function 
     Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%208%20-%20Dynamically%20Updating%20Data
 */
 
