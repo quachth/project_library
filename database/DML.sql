@@ -4,8 +4,8 @@ Project Name: Project Library - Data Manipulation Queries
 */
 
 /* Dropdown Menus */
--- get all Author IDs and Names to populate the Authors dropdown
-SELECT authorID, CONCAT(firstName, ' ', lastName) AS AuthorName FROM Authors;
+-- get all Author IDs, Names, and Birthdates to populate the Authors dropdown
+SELECT authorID, CONCAT(firstName, ' ', lastName) AS fullAuthorName, birthdate FROM Authors;
 
 -- get all Publisher IDs and Names to populate the Publishers dropdown
 SELECT publisherID, name FROM Publishers ORDER BY name;
@@ -14,32 +14,10 @@ SELECT publisherID, name FROM Publishers ORDER BY name;
 SELECT bookID, title FROM Books ORDER BY title;
 
 -- get all Borrower IDs and Names to populate the Borrowers dropdown
-SELECT borrowerID, CONCAT(firstName, ' ', lastName) AS BorrowerName FROM Borrowers ORDER BY lastName, firstName;
+SELECT borrowerID, CONCAT(firstName, ' ', lastName) AS fullName, email FROM Borrowers ORDER BY lastName, firstName;
 
 -- Fill the dropdown menu for BorrowingRecordItems to select specific borrowing records and books
-SELECT recordID, CONCAT('Record #', recordID, ' for Borrower ID: ', borrowerID) AS RecordDescription FROM BorrowingRecords ORDER BY recordID;
-
--- get all books and their author and publisher information
-SELECT 
-    Books.title AS BookTitle, 
-    CONCAT(Authors.firstName, ' ', Authors.lastName) AS AuthorName, 
-    Publishers.name AS PublisherName,
-    Books.genre AS Genre
-FROM 
-    Books
-INNER JOIN Authors ON Books.authorID = Authors.authorID
-INNER JOIN Publishers ON Books.publisherID = Publishers.publisherID;
-
--- get the details of a single book for updating the form
-SELECT 
-    title, authorID, isbn, publisherID, genre 
-FROM 
-    Books 
-WHERE 
-    bookID = :bookID;
-
--- provides publisher drop-down menu data for forms that add new books
-SELECT publisherID, name FROM Publishers;
+SELECT * FROM BorrowingRecords;
 
 
 /*Authors*/
@@ -77,8 +55,19 @@ DELETE FROM Publishers WHERE publisherID = :publisherID;
 
 
 /*Books*/
--- get all Books to populate Books table
-SELECT * from Books;
+-- get all books and their author and publisher information
+SELECT
+    bookID,
+    title, 
+    CONCAT(Authors.firstName, ' ', Authors.lastName) AS authorName,
+    isbn,
+    Publishers.name AS publisher,
+    genre
+FROM 
+    Books
+INNER JOIN Authors ON Books.authorID = Authors.authorID
+LEFT OUTER JOIN Publishers ON Publishers.publisherID = Books.publisherID
+ORDER BY Books.bookID;
 
 -- add new book
 INSERT INTO Books (title, authorID, isbn, publisherID, genre) 
@@ -91,6 +80,7 @@ WHERE bookID = :bookID;
 
 -- delete book
 DELETE FROM Books WHERE bookID = :bookID;
+
 
 /*Borrowers*/
 -- display all borrowers on table
@@ -110,31 +100,42 @@ DELETE FROM Borrowers WHERE borrowerID = :borrowerID;
 
 
 /*BorrowingRecords*/
+-- display borrowing record information on UI table
+SELECT BorrowingRecords.recordID, CONCAT(Borrowers.firstName, ' ', Borrowers.lastName) AS fullName,  BorrowingRecords.borrowDate, BorrowingRecords.returnDate
+FROM BorrowingRecords
+INNER JOIN Borrowers ON BorrowingRecords.borrowerID=Borrowers.borrowerID
+ORDER BY BorrowingRecords.recordID;
+
 -- add a borrowing record
-INSERT INTO BorrowingRecords (borrowerID, borrowDate, returnDate)
-VALUES(
-    SELECT borrowerID FROM Borrowers WHERE borrowerID = :borrowerID;
-    CURDATE(),
-    returnDate = :returnDate
-)
+INSERT INTO BorrowingRecords (borrowerID, borrowDate, returnDate) 
+VALUES (:borrowerID, :borrowDate, :returnDate);
 
 -- update the status of the borrowing record
 UPDATE BorrowingRecords
 SET returnDate = CURDATE()
 WHERE recordID = :recordID;
 
--- find all records from a borrower
-SELECT * from BorrowingRecords WHERE borrowerID = :borrowerID;
-
 -- delete a borrowing record
 DELETE FROM BorrowingRecords WHERE recordID = :recordID;
 
 
 /* BorrowingRecordItems*/
--- show book name corresponding to selected ID
-SELECT bookID, Books.title AS Title
-FROM BorrowingRecordItems
-INNER JOIN Books ON Books.bookID = bookID;
+-- Display all record items including recordID, bookID, book title, and borrower the record belongs to
+SELECT 
+    BorrowingRecordItems.recordID, 
+    BorrowingRecordItems.bookID, 
+    Books.title AS title, 
+    CONCAT(Borrowers.firstName, ' ', Borrowers.lastName) AS borrowerName
+FROM 
+    BorrowingRecordItems
+INNER JOIN 
+    Books ON BorrowingRecordItems.bookID = Books.bookID
+INNER JOIN 
+    BorrowingRecords ON BorrowingRecordItems.recordID = BorrowingRecords.recordID
+INNER JOIN 
+    Borrowers ON BorrowingRecords.borrowerID = Borrowers.borrowerID
+ORDER BY 
+    BorrowingRecordItems.recordID;
 
 -- adds an item to a borrowing record
 INSERT INTO BorrowingRecordItems (recordID, bookID)
@@ -148,6 +149,17 @@ DELETE FROM BorrowingRecordItems WHERE recordID = :recordID AND bookID = :bookID
 
 
 
+/*Currently unused queries on UI*/
+-- get the details of a single book for updating the form
+SELECT 
+    title, authorID, isbn, publisherID, genre 
+FROM 
+    Books 
+WHERE 
+    bookID = :bookID;
+
+-- find all records from a borrower
+SELECT * from BorrowingRecords WHERE borrowerID = :borrowerID;
 
 -- find all books by a particular author
 SELECT Books.title, Publishers.name AS PublisherName
