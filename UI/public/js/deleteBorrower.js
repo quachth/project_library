@@ -34,7 +34,7 @@ function deleteBorrower(borrowerID) {
 }
 
 function deleteRow(borrowerID) {
-    let table = document.getElementById("borrowersTable");
+/*    let table = document.getElementById("borrowersTable");
     for (let i = 0, row; row = table.rows[i]; i++) {
         // iterate through rows and delete the ones that match id
         if (table.rows[i].getAttribute("data-value") == borrowerID) {
@@ -42,4 +42,6 @@ function deleteRow(borrowerID) {
             break;
         }
     }
+*/
+    location.reload();
 }

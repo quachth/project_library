@@ -222,7 +222,7 @@ app.put('/update-book', function(req, res, next) {
     };
 
     let queryUpdateBook = `UPDATE Books SET title = ?, authorID = ?, isbn = ?, publisherID = ?, genre = ? WHERE bookID = ?;`;
-    let queryShowUpdate = `SELECT * FROM Books WHERE Books.bookID = ?;`;
+    let queryShowUpdate = `SELECT * FROM Books WHERE bookID = ?;`;
     
     // 1st query for update
     db.pool.query(queryUpdateBook, [data.title, authorID, data.isbn, publisherID, data.genre, bookID], function(error, rows, fields) {
@@ -518,8 +518,8 @@ app.post('/add-record-item-form', function(req, res){
         //Check for errors
         if (error) {
             //Log error to terminal and set response 400 to indicate bad request
-            console.log(error);
-            res.sendStatus(400);
+            console.log("Record-Item entry already exists.");
+            res.sendStatus(400).send({error: "Record-Item entry already exists."});
 
         }
         else {
@@ -560,6 +560,38 @@ app.delete('/delete-record-item', function(req, res, next){
             res.sendStatus(204);
         }
     })
+})
+
+// Update record item
+app.put('/update-record-item', function(req, res, next) {
+    let data = req.body;
+
+    let recordID = parseInt(data.recordID);
+    let bookID = parseInt(data.bookID);
+    let newBookID = parseInt(data.newBookID);
+
+    let queryUpdateRecordItem = `UPDATE BorrowingRecordItems SET bookID = ? WHERE recordID = ? AND bookID = ?;`;
+    let queryShowUpdate = `SELECT * FROM BorrowingRecordItems WHERE recordID = ? AND bookID = ?;`;
+
+    // 1st query for update
+    db.pool.query(queryUpdateRecordItem, [newBookID, recordID, bookID], function(error, rows, fields) {
+        if(error) {
+            res.sendStatus(500).send({error: "RecordID and BookID combination not found."});
+        }
+        else {
+            // 2nd query
+            db.pool.query(queryShowUpdate, [recordID, newBookID], function(error, rows, fields) {
+                if (error) {
+                    console.log("Error Sending Rows.");
+                    res.sendStatus(400);
+                }
+                else {
+                    res.send(rows);
+                }
+            })
+        }
+    })
+
 })
              
 

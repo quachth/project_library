@@ -41,7 +41,7 @@ function deleteRecordItem(recordID, bookID) {
 }
 
 function deleteRowItem(recordID, bookID) {
-    let table = document.getElementById("borrowingRecordItemsTable");
+/*    let table = document.getElementById("borrowingRecordItemsTable");
 
     for (let i=0, row; row = table.rows[i]; i++) {
         // Iterate through rows using row variable assigned in the for loop
@@ -50,4 +50,6 @@ function deleteRowItem(recordID, bookID) {
             break;
         }
     }
+*/
+    location.reload();
 }

@@ -67,7 +67,8 @@
             
             <div>
                 <h2>Add New</h2>
-                Using the table above, please select the ID number of the record and the ID number of the book item to be added to that record.
+                Using the table above, please select the ID number of the record and the ID number of the book item to be added to that record. <br />
+                Bad Request errors indicate that RecordID:BookID entry already exists.
                 <fieldset>
                     <form method="POST" id="addRecordItem" action="/add-record-item-form">
                         <label for="recordItemIDs">Record ID:</label>
@@ -93,6 +94,47 @@
                     </form>
                 </fieldset>
             </div>
+
+           <div>
+                <h2>Update</h2>
+                All fields must be filled. Updates to BorrowingRecordItems require that:
+                <p>1) The current RecordID:BookID exists in the table above, and <br />
+                2) The new RecordID:BookID combination does not already exist on the table above.</p>
+                To update: select existing RecordID and BookID entry, then select new book to update to for that entry.
+                <fieldset>
+                    <form id="updateRecordItemForm">
+                        <label for="updateRecordID">Record ID:</label>
+                        <span style="margin: 0 10px">
+                            <select name="selectBRIRecordID" id="selectBRIRecordID">
+                                <option value="">1. Select a recordID to update:</option>
+                                {{#each records}}
+                                <option value="{{this.recordID}}">{{this.recordID}}</option>
+                                {{/each}}
+                            </select>
+                        </span>
+                        <span style="margin: 0 10px">
+                            <select name="selectBRIBookID" id="selectBRIBookID">
+                                <option value="">2. Select corresponding record's book to update:</option>
+                                {{#each items}}
+                                <option value="{{this.bookID}}">{{this.title}}</option>
+                                {{/each}}
+                            </select>
+                        </span>
+                        <span style="margin: 0 10px">
+                            <input type="text" id="selectnewBRIBookID" name="selectnewBRIBookID" list="items" autocomplete="off" size="30">
+                            <datalist id="items">
+                                {{#each items}}
+                                <option value="{{this.bookID}}">{{this.title}}</option>
+                                {{/each}}
+                            </datalist>
+                        </span>
+                        <br>
+                        <input type="submit" onclick="return confirm('Are you sure you want to update this record?')"/>
+                    </form>
+                    <script src="./js/updateRecordItem.js"></script>
+                </fieldset>
+            </div>
+
         </main>
     </body>
 </html>

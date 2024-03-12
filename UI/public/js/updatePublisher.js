@@ -74,7 +74,7 @@ updatePublisherForm.addEventListener("submit", function (e) {
 })
 
 function updateRow(data, publisherID) {
-    let parsedData = JSON.parse(data);
+/*    let parsedData = JSON.parse(data);
     let table = document.getElementById("publishersTable");
     for (let i = 0, row; row = table.rows[i]; i++) {
         // iterate through rows and update row with matching publisherID with new input
@@ -96,4 +96,6 @@ function updateRow(data, publisherID) {
             tdContact.innerHTML = parsedData[0].contact;
         }
     }
+*/
+    location.reload();
 }

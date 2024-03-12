@@ -81,7 +81,7 @@ updateAuthorForm.addEventListener("submit", function (e) {
 })
 
 function updateRow(data, authorID) {
-    let parsedData = JSON.parse(data);
+/*    let parsedData = JSON.parse(data);
     let table = document.getElementById("authorsTable");
     for (let i = 0, row; row = table.rows[i]; i++) {
         // iterate through rows and update row with matching authorID with new input
@@ -106,4 +106,6 @@ function updateRow(data, authorID) {
             tdBirth.innerHTML = parsedData[0].birthdate;
         }
     }
+*/
+    location.reload();
 }

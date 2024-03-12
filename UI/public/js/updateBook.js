@@ -87,7 +87,7 @@ updateBookForm.addEventListener("submit", function (e) {
 })
 
 function updateRow(data, bookID) {
-    let parsedData = JSON.parse(data);
+/*    let parsedData = JSON.parse(data);
     let table = document.getElementById("booksTable");
     for (let i = 0, row; row = table.rows[i]; i++) {
         // iterate through rows and update row with matching bookID with new input
@@ -115,4 +115,6 @@ function updateRow(data, bookID) {
             tdGenre.innerHTML = parsedData[0].genre;
         }
     }
+*/
+    location.reload();
 }

@@ -48,7 +48,7 @@ updateRecordForm.addEventListener("submit", function (e) {
 })
 
 function updateRow(data, recordID) {
-    let parsedData = JSON.parse(data);
+/*    let parsedData = JSON.parse(data);
 
     let table = document.getElementById("borrowingRecordsTable");
 
@@ -64,4 +64,6 @@ function updateRow(data, recordID) {
             td.innerHTML = parsedData[0].returnDate;
         }
     }
+*/
+    location.reload();
 }

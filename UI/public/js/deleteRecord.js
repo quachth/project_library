@@ -38,7 +38,7 @@ function deleteRecord(recordID) {
 }
 
 function deleteRow(recordID) {
-    let table = document.getElementById("borrowingRecordsTable");
+/*    let table = document.getElementById("borrowingRecordsTable");
     for (let i = 0, row; row = table.rows[i]; i++) {
         // Iterate through rows, which are accessed using the "row" variable assigned in the for loop
         if (table.rows[i].getAttribute("data-value") == recordID) {
@@ -46,4 +46,6 @@ function deleteRow(recordID) {
             break;
         }
     }
+*/
+    location.reload();
 }

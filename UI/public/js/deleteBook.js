@@ -34,7 +34,7 @@ function deleteBook(bookID) {
 }
 
 function deleteRow(bookID) {
-    let table = document.getElementById("booksTable");
+/*    let table = document.getElementById("booksTable");
     for (let i = 0, row; row = table.rows[i]; i++) {
         // iterate through rows and delete the ones that match id
         if (table.rows[i].getAttribute("data-value") == bookID) {
@@ -42,4 +42,6 @@ function deleteRow(bookID) {
             break;
         }
     }
+*/
+    location.reload();
 }

@@ -34,7 +34,7 @@ function deletePublisher(publisherID) {
 }
 
 function deleteRow(publisherID) {
-    let table = document.getElementById("publishersTable");
+/*    let table = document.getElementById("publishersTable");
     for (let i = 0, row; row = table.rows[i]; i++) {
         // iterate through rows and delete the ones that match id
         if (table.rows[i].getAttribute("data-value") == publisherID) {
@@ -42,4 +42,6 @@ function deleteRow(publisherID) {
             break;
         }
     }
+*/
+    location.reload();
 }
