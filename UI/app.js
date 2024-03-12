@@ -195,7 +195,7 @@ app.post('/add-book', function(req, res){
     // Capture NULL values from Publisher field
     let publisher = parseInt(data.newBookPub);
     if (isNaN(publisher)) {
-        publisher = 'NULL';
+        publisher = null;
     }
 
     let queryAddBook = `INSERT INTO Books (title, authorID, isbn, publisherID, genre) VALUES ('${data['newTitle']}', '${data['newBookAuthor']}', '${data['newIsbn']}', ${publisher}, '${data['newBookGenre']}')`;
@@ -219,7 +219,7 @@ app.put('/update-book', function(req, res, next) {
     // Change 0 publisherID to null for database
     if (publisherID == 0) {
         publisherID = null;
-    }
+    };
 
     let queryUpdateBook = `UPDATE Books SET title = ?, authorID = ?, isbn = ?, publisherID = ?, genre = ? WHERE bookID = ?;`;
     let queryShowUpdate = `SELECT * FROM Books WHERE Books.bookID = ?;`;
