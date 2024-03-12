@@ -18,7 +18,7 @@ var exphbs = require('express-handlebars');                                 // I
 app.engine('.hbs', engine({extname: ".hbs", defaultLayout: false}));        // Create an instance of the handlebars engine to process templates
 app.set('view engine', '.hbs');                                             // Tell express to use the handlebars engine whenever it encounters a *.hbs file. 
 app.use(express.json());
-app.use(express.urlencoded({exnteded: true}));
+app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
 
 //Database
@@ -208,7 +208,7 @@ app.post('/add-book', function(req, res){
     });
 });
 
-// Update Books
+// Update Books 
 app.put('/update-book', function(req, res, next) {
     let data = req.body;
 

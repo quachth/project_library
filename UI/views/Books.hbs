@@ -120,8 +120,8 @@
                 <fieldset>
                     <form id="updateBookForm"> 
                         <span style="margin: 0 10px">
-                            <label for="updateBookFull">Book Title:</label>
-                            <input type="text" id="selectBook" name="updateBookFull" list="data" autocomplete="off" placeholder="Select book to update">
+                            <label for="selectBook">Book Title:</label>
+                            <input type="text" id="selectBook" name="selectBook" list="data" autocomplete="off" placeholder="Select book to update">
                             <datalist id="data">
                                 {{#each data}}
                                 <option value="{{this.bookID}}">{{this.title}}</option>
@@ -133,8 +133,8 @@
                             <input type="text" id="updateTitle" name="updateTitle">
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="updateBookAuthor">Author:</label>
-                            <input type="text" id="selectBookAuthor" name="updateBookAuthor" list="authors" autocomplete="off" placeholder="Select author for update">
+                            <label for="selectBookAuthor">Author:</label>
+                            <input type="text" id="selectBookAuthor" name="selectBookAuthor" list="authors" autocomplete="off" placeholder="Select author for update">
                             <datalist id="authors">
                                 {{#each authors}}
                                 <option value="{{this.authorID}}">{{this.authorName}} - {{this.birthdate}} </option>
@@ -146,10 +146,10 @@
                             <input type="text" id="updateISBN" name="updateISBN"/>
                         </span>
                         <span style="margin: 0 10px">
-                            <label for="updateBookPub">Publisher:</label>
-                            <input type="text" id="selectBookPub" name="updateBookPub" list="publishers" autocomplete="off" placeholder="Select publisher for update">
+                            <label for="selectBookPub">Publisher:</label>
+                            <input type="text" id="selectBookPub" name="selectBookPub" list="publishers" autocomplete="off" placeholder="Select publisher for update">
                             <datalist id="publishers">
-                                <option value=NULL><i>No Publisher</i></option>
+                                <option value="NULL"><i>No Publisher</i></option>
                                 {{#each publishers}}
                                 <option value="{{this.publisherID}}">{{this.name}}</option>
                                 {{/each}}
@@ -161,7 +161,6 @@
                         </span>
                         <br>
                         <input type="submit" onclick="return confirm('Are you sure you want to update this book?')"/>
-
                     </form>
                     <script src="./js/updateBook.js"></script>
                 </fieldset>

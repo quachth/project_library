@@ -45,12 +45,12 @@ updateBookForm.addEventListener("submit", function (e) {
         console.log("No author input found.")
         return;
     }
-    if (isbnValue === null || isbnValue === "") {
+    if (isbnValue === 'null' || isbnValue === "") {
         console.log("No isbn input found.")
         return;
     }
-    if (bookPublisherValue === null || bookPublisherValue === "") {
-        bookPublisherValue = 0;
+    if (bookPublisherValue === "NULL" || bookPublisherValue === "") {
+        bookPublisherValue = "0";
     }
     if (genreValue === null || genreValue === "") {
         console.log("No genre input found.")
