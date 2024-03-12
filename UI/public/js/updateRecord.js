@@ -22,7 +22,7 @@ updateRecordForm.addEventListener("submit", function (e) {
 
         // Get values from form fields
         let recordIdValue = inputRecordId.value;
-w
+        
         // Put data we want to send in js object
         let data = { recordID: recordIdValue };
 
