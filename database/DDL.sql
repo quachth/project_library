@@ -1,6 +1,7 @@
 /* Authors and Group: Theresa Quach and Lianghui Wang - Group 29
 Course: CS340
 Project Name: Project Library
+Description: This SQL database file is to be used for Group 29's CS340 Portfolio Project. 
 Citation(s): 
     Code dump from MySQL Workbench was then altered and cleaned for importability. Process to create dump file was explained in the
     Project Step 2 Draft: Normalized Schema + DDL instructions on forward engineering a scheme in MySQL Workbench 
@@ -81,7 +82,7 @@ UNLOCK TABLES;
 
 --
 -- Create `Books` table
---
+-- Note: Publisher attribute is NULLABLE
 DROP TABLE IF EXISTS `Books`;
 CREATE TABLE `Books` (
   `bookID` int(11) NOT NULL AUTO_INCREMENT,
@@ -162,7 +163,7 @@ UNLOCK TABLES;
 
 --
 -- Create `BorrowingRecordItems` table
---
+-- Intersection table for M:N relationship between Books and BorrowingRecords.
 DROP TABLE IF EXISTS `BorrowingRecordItems`;
 CREATE TABLE `BorrowingRecordItems` (
   `recordID` int(11) NOT NULL,
