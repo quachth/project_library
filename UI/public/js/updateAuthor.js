@@ -2,10 +2,13 @@
 Course: CS340
 Project Name: Project Library
 Citation(s): 
+    Scope: Function
     Date: 3/3/24
     Adapted from the starter code template from the github Nodejs starter app guide provided by Professor Curry and Professor Safonte from Oregon State University.
-    Appropriate variables were changed for updateAuthor.js function 
+    Specifically, code to get data from our form fields and set up the AJAX request was taken from the guide, with appropriate variables changed for updateAuthor function.
     Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%208%20-%20Dynamically%20Updating%20Data
+
+    Function to refresh the page after update is our own work.
 */
 
 // Get objects we need to modify
