@@ -1,8 +1,15 @@
 /* Authors and Group: Theresa Quach and Lianghui Wang - Group 29
 Course: CS340
 Project Name: Project Library - App.js
-Citation(s): 
-    Starter Code from the github Nodejs starter app guide used to set up the body of the app.js file and to use handlebar templates (https://github.com/osu-cs340-ecampus/nodejs-starter-app)
+Citation(s):
+    Scope: Module
+    Date: 3/14/2024
+    All code found in app.js was adapted from the Starter Code from the github Node.js starter app
+    More specifically, code to set up Node.js/Express, to connect our database, and to use handlebars were taken from the Node.js starter guide found in CS340's Week 7 Project Development module on Developing in Node.JS
+    Additionally, the code to run SQL queries against the database using 'db.pool.query()' was also taken from the guide
+    URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app
+
+    The code for input validation in our entities is our own work.
 */
 
 /*
