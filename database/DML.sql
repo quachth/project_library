@@ -1,6 +1,7 @@
 /* Authors and Group: Theresa Quach and Lianghui Wang - Group 29
 Course: CS340
 Project Name: Project Library - Data Manipulation Queries
+Description: This file contains queries used to implement the CRUD operations found on Group 29's CS340 Portfolio Project website. 
 */
 
 /* Dropdown Menus */
@@ -149,7 +150,7 @@ DELETE FROM BorrowingRecordItems WHERE recordID = :recordID AND bookID = :bookID
 
 
 
-/*Currently unused queries on UI*/
+/*Currently unused queries on UI - may be later implemented for portfolios.*/
 -- get the details of a single book for updating the form
 SELECT 
     title, authorID, isbn, publisherID, genre 
@@ -183,12 +184,7 @@ WHERE publisherID = (SELECT publisherID FROM Publishers WHERE name = :publisherN
 
 
 
-
-
-
-
-
--- -- some example of using real data
+-- -- Some example of using real data
 -- --
 -- -- For 'Authors' table
 -- --
