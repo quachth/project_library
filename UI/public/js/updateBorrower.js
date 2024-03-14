@@ -107,5 +107,6 @@ function updateRow(data, borrowerID) {
         }
     }
 */
+    // reloads page to display updated information on table
     location.reload();
 }

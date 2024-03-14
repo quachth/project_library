@@ -116,5 +116,6 @@ function updateRow(data, bookID) {
         }
     }
 */
+    // reloads page to display updated information on table
     location.reload();
 }

@@ -43,5 +43,6 @@ function deleteRow(authorID) {
         }
     }
 */
+    // reloads page to display updated information on table
     location.reload();
 }
