@@ -10,3 +10,5 @@ alter the information found on a MYSQL Database also created by our group to org
 All code to construct the database DDL.sql file, handlebar templates, and primary application file app.js has been based on and adapted from code found in the CS340 modules and the starter Node.js git guide, with the exception of the CSS file we created for the styling of our webpage.
 
 All HTML files foudn under UI/pages has been replaced with their respective handlebars found under UI/views.
+
+To start, run 'npm install' on the package.json files found in both the UI and database folders.
