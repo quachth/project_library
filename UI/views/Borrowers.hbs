@@ -67,7 +67,7 @@
 
             <div>
                 <h2>Add New</h2>
-                All fields must be filled.
+                All fields must be filled. Internal server errors indicate input email is already in use.
                 <fieldset>
                     <form method="POST" id="addBorrower" action="/add-borrower">
                         <span style="margin: 0 10px">
@@ -94,7 +94,8 @@
 
             <div>
                 <h2>Update</h2>
-                All fields must be filled.
+                All fields must be filled. <br />
+                Updates to a borrower's email that does not appear in the table above indicate that the input email is already registered to another borrower and/or is in use.
                 <fieldset>
                     <form id="updateBorrowerForm">
                         <span style="margin: 0 10px">

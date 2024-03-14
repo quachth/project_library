@@ -33,7 +33,8 @@
             <div>
                 <h2>Browse Record Items</h2>
                 <p>Records and their corresponding book items will populate here.</p>
-                <p>Only one copy of an item is allowed per record. To re-borrow an item, please create a new record for the borrower. Otherwise, a bad request will be returned.</p>
+                <p>Only one copy of an item is allowed per record. To re-borrow an item, please create a new record for the borrower. Otherwise, a bad request will be returned. <br />
+                <b>Deletion of an M:N relationship is implemented on this intersection table.</b></p>
                 {{!-- Create a table--}}
                 <table id="borrowingRecordItemsTable">
 
@@ -100,7 +101,8 @@
                 All fields must be filled. Updates to BorrowingRecordItems require that:
                 <p>1) The current RecordID:BookID exists in the table above, and <br />
                 2) The new RecordID:BookID combination does not already exist on the table above.</p>
-                To update: select existing RecordID and BookID entry, then select new book to update to for that entry.
+                To update: select existing RecordID and BookID entry, then select new book to update to for that entry. <b>This implements UPDATE to an M:N relationship.</b><br />
+                If update does not appear in table above, double check that record:book entry exists.
                 <fieldset>
                     <form id="updateRecordItemForm">
                         <label for="updateRecordID">Record ID:</label>
